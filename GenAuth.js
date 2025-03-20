@@ -135,9 +135,6 @@ class GenAuth {
         console.log("Performing application bootstrapping");
     
         // Perform Implicit Grant Authentication
-        //
-        // Note: Pass the query string parameters in the 'state' parameter so that they are returned
-        //       to us after the implicit grant redirect.
         this.client.loginImplicitGrant(this.appParams.clientId, this.redirectUri, { state: this.integrationQueryString })
             .then((data) => {
                 // User Authenticated
