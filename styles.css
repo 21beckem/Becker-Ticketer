@@ -1,0 +1,219 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Roboto, sans-serif;
+}
+html *, body * {
+    font-family: Roboto, sans-serif;
+}
+:root {
+    --accordion-transition: none;
+    --gen-orange: #FF451A;
+    --gen-dark-gray: #33383D;
+    --gen-light-gray: #98A7B8;
+    --gen-blue: #2A60C8;
+    --gen-green: #77DD22;
+}
+/* HTML: <div class="loader"></div> */
+.loader {
+    --c: no-repeat linear-gradient(var(--gen-orange) 0 0);
+    background: 
+        var(--c),var(--c),var(--c),
+        var(--c),var(--c),var(--c),
+        var(--c),var(--c),var(--c);
+    background-size: 16px 16px;
+    animation: 
+        l32-1 1s infinite,
+        l32-2 1s infinite;
+}
+@keyframes l32-1 {
+    0%,100% {width:45px;height: 45px}
+    35%,65% {width:65px;height: 65px}
+}
+  @keyframes l32-2 {
+    0%,40%  {background-position: 0 0,0 50%, 0 100%,50% 100%,100% 100%,100% 50%,100% 0,50% 0,  50% 50% }
+    60%,100%{background-position: 0 50%, 0 100%,50% 100%,100% 100%,100% 50%,100% 0,50% 0,0 0,  50% 50% }
+}
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+.accordion {
+    background-color: var(--gen-dark-gray);
+    color: var(--gen-light-gray);
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+    height: 55px;
+}
+.accordion:not(.active) span {
+    display: unset;
+}
+.accordion.active span {
+    display: none;
+}
+
+.accordion.active, .accordion:hover {
+    color: white;
+}
+
+.accordion:after {
+    content: '\002B';
+    color: #777;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: "\2212";
+}
+
+.accordion-panel {
+    padding: 0 18px;
+    background-color: white;
+    height: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    transition: var(--accordion-transition);
+}
+
+label:not(.either_or) {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+input[type="text"], textarea {
+    width: calc(100% - 20px);
+    resize: none;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgb(36, 36, 36);
+    box-shadow: 0px 0px 20px -10px #bfbfbf inset;
+    color: black;
+}
+input[type="text"]:disabled, textarea:disabled {
+    border-color: var(--gen-light-gray);
+    color: var(--gen-light-gray);
+}
+
+.submitBtn {
+    padding: 10px 30px;
+    margin-bottom: 20px;
+    background-color: white;
+    color: var(--gen-orange);
+    border: 1px solid var(--gen-orange);
+    cursor: pointer;
+}
+.submitBtn:focus {
+    outline: none;
+    border-color: var(--gen-orange);
+    color: white;
+    background-color: var(--gen-orange);
+}
+.submitBtn:disabled {
+    border-color: var(--gen-light-gray);
+    color: var(--gen-light-gray);
+    cursor: not-allowed;
+}
+
+#peopleReultsList .personCard {
+    position: relative;
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 1px solid rgb(36, 36, 36);
+    box-shadow: 0px 0px 20px -10px #bfbfbf inset;
+    color: black;
+    margin-top: 10px;
+}
+#peopleReultsList .personCard h3 { margin: 0; color: #306090; cursor: pointer; }
+#peopleReultsList .personCard p { margin: 0; padding-left: 10px; }
+#peopleReultsList .personCard button {
+    position: absolute;
+    height: calc(100% - 10px);
+    right: 5px;
+    top: 5px;
+    padding: 3px 15px;
+    color: var(--gen-orange);
+    border: 1px solid var(--gen-orange);
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+#peopleReultsList .personCard.selected {
+    box-shadow: 0px 0px 0px 3px var(--gen-green);
+}
+
+/* Custom Radio Buttons */
+input[type="radio"] { display: none }
+div.either_or {
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+}
+label.either_or {
+    position: relative;
+    color: var(--gen-orange);
+    cursor: pointer;
+    text-align: center;
+    gap: 0.8em;
+    border: 1px solid var(--gen-orange);
+    padding: 8px;
+    flex: 1;
+    align-content: center;
+    font-size: 15px;
+}
+label.either_or.one { border-radius: 5px 0 0 5px }
+label.either_or.two { border-radius: 0 5px 5px 0 }
+input[type="radio"]:checked+label.either_or {
+    background-color: var(--gen-orange);
+    color: white;
+}
+
+/* Autocomplete */
+.autoComplete_wrapper {
+    width: fit-content;
+}
+.autoComplete_wrapper input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgb(36, 36, 36);
+    box-shadow: 0px 0px 20px -10px #bfbfbf inset;
+    color: black;
+}
+.autoComplete_wrapper ul {
+    width: 100%;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 0 0 10px 10px;
+    border: 1px solid rgb(36, 36, 36);
+    border-top: 0;
+    box-shadow: 0px 0px 20px -10px #bfbfbf inset;
+    color: black;
+    background-color: white;
+    overflow-y: scroll;
+    max-height: 200px;
+}
+.autoComplete_wrapper ul li {
+    padding: 10px;
+    cursor: pointer;
+}
+.autoComplete_wrapper ul li:hover {
+    background-color: var(--gen-orange);
+    color: white;
+}
