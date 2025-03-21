@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incomplete Ticket Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+:root {
+    --accordion-transition: none;
+    --gen-orange: #FF451A;
+    --gen-dark-gray: #33383D;
+    --gen-light-gray: #98A7B8;
+    --gen-blue: #2A60C8;
+    --gen-green: #77DD22;
+}
+button {
+    padding: 10px 30px;
+    margin-bottom: 20px;
+    background-color: white;
+    color: var(--gen-light-gray);
+    border: 1px solid var(--gen-light-gray);
+    cursor: pointer;
+}
+    </style>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-blue-600 p-4 flex justify-between items-center shadow-md" style="background-color: var(--gen-dark-gray);">
+        <h1 class="text-xl font-bold text-white">Becker Tickets</h1>
+        <div class="flex gap-4">
+            <button class="px-4 py-2 flex items-center" style="color: var(--gen-light-gray);">
+                <i class="fas fa-plus-square mr-2"></i> New Ticket
+            </button>
+            <button class="px-4 py-2 flex items-center" style="color: var(--gen-light-gray);">
+                <i class="fas fa-user-plus mr-2"></i> New Person
+            </button>
+            <button class="px-4 py-2 flex items-center" style="color: var(--gen-light-gray);">
+                <i class="fas fa-folder-open mr-2"></i> Created Tickets
+            </button>
+            <button class="px-4 py-2 flex items-center" style="color: var(--gen-light-gray);">
+                <i class="fas fa-info-circle mr-2"></i> About
+            </button>
+        </div>
+    </header>
+    <main class="max-w-2xl mx-auto mt-6 p-4 bg-white shadow-md rounded">
+        <h2 class="text-2xl font-semibold mb-4">Incomplete Tickets</h2>
+        <ul id="ticketList" class="space-y-4">
+            <!-- Tickets will be dynamically added here -->
+        </ul>
+    </main>
+
+    <script>
+        // Sample tickets data
+        const tickets = [
+            { id: 1, title: "Fix server issue", status: "incomplete" },
+            { id: 2, title: "Update software", status: "incomplete" },
+            { id: 3, title: "Reset user password", status: "complete" }
+        ];
+
+        function loadTickets() {
+            const list = document.getElementById("ticketList");
+            list.innerHTML = "";
+            tickets.filter(t => t.status === "incomplete").forEach(ticket => {
+                const li = document.createElement("li");
+                li.className = "p-4 bg-gray-100 rounded flex justify-between items-center";
+                li.innerHTML = `<span>${ticket.title}</span> <button class="px-4 py-2 flex items-center" style="border-color: var(--gen-orange); color: var(--gen-orange)">Complete</button>`;
+                list.appendChild(li);
+            });
+        }
+        
+        document.addEventListener("DOMContentLoaded", loadTickets);
+        
+        // Dropdown menu toggle
+        document.querySelector(".relative").addEventListener("click", () => {
+            document.getElementById("dropdown").classList.toggle("hidden");
+        });
+    </script>
+</body>
+</html>

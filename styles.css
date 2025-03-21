@@ -32,7 +32,7 @@ html *, body * {
     0%,100% {width:45px;height: 45px}
     35%,65% {width:65px;height: 65px}
 }
-  @keyframes l32-2 {
+@keyframes l32-2 {
     0%,40%  {background-position: 0 0,0 50%, 0 100%,50% 100%,100% 100%,100% 50%,100% 0,50% 0,  50% 50% }
     60%,100%{background-position: 0 50%, 0 100%,50% 100%,100% 100%,100% 50%,100% 0,50% 0,0 0,  50% 50% }
 }
@@ -244,6 +244,7 @@ input[type="radio"]:checked+label.either_or {
     background-color: white;
     overflow-y: scroll;
     max-height: 200px;
+    z-index: 2;
 }
 .autoComplete_wrapper ul:not(:has(li)) {
     display: none;

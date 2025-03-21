@@ -82,11 +82,11 @@ class GenAuth {
     showToast(message) { this.myClientApp.alerting.showToastPopup( 'Becker Ticketer', message, { id: 'Becker-Ticketer-statusMsg' } ); }
     onAppFocus() {
         this.logLifecycleEvent('App Lifecycle Event: focus', true);
-        this.showToast('App Focused');
+        // this.showToast('App Focused');
     }
     onAppBlur () {
         this.logLifecycleEvent('App Lifecycle Event: blur', true);
-        this.showToast('App Blurred');
+        // this.showToast('App Blurred');
     }
     parseAppParameters(queryString) {
         console.log("Interaction Widget Proxy Query String: " + queryString);

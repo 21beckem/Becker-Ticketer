@@ -143,8 +143,9 @@ function selectPersonAndStartTicket(U_identifier) {
 
 async function generateTicketWithAI() {
     showLoader(true);
-    let ticketDescription = await TDcontrol.generateAIDescription(_('agentNotesTextarea').value);
+    let [ticketDescription, title] = await TDcontrol.generateAIDescription(_('agentNotesTextarea').value);
     _('DescriptionTextarea_ToSubmit').value = ticketDescription;
+    _('Title_toSubmit').value = title;
     showLoader(false);
 
     _('ReviewAccordionBtn').setActive();
@@ -173,6 +174,8 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
         inputEl.removeAttribute("data-value");
         clearTimeout(timeout);
         let query = this.value.trim();
+        
+        if (query.length < 2) return;
 
         timeout = setTimeout(async () => {
             await new Promise(r => setTimeout(r, 1));
