@@ -49,6 +49,8 @@ class GenAuth {
         //
         // Lifecycle Events
         //
+        this.boundFocusEvent = this.onAppFocus.bind(this);
+        this.boundBlurEvent = this.onAppBlur.bind(this);
         this.myClientApp.lifecycle.addBootstrapListener(() => {
             this.logLifecycleEvent('App Lifecycle Event: bootstrap', true);
             this.initializeApplication();
@@ -57,8 +59,8 @@ class GenAuth {
             this.logLifecycleEvent('App Lifecycle Event: stop', true);
         
             // Clean up other, persistent listeners
-            this.myClientApp.lifecycle.removeFocusListener(this.onAppFocus);
-            this.myClientApp.lifecycle.removeBlurListener(this.onAppBlur);
+            this.myClientApp.lifecycle.removeFocusListener(this.boundFocusEvent);
+            this.myClientApp.lifecycle.removeBlurListener(this.boundBlurEvent);
         
             this.myClientApp.lifecycle.stopped();
         
@@ -73,12 +75,12 @@ class GenAuth {
         
             this.logLifecycleEvent('Notified Genesys Cloud of Successful App Stop', false);
         });
-        this.myClientApp.lifecycle.addFocusListener(this.onAppFocus);
-        this.myClientApp.lifecycle.addBlurListener(this.onAppBlur);
+        this.myClientApp.lifecycle.addFocusListener(this.boundFocusEvent);
+        this.myClientApp.lifecycle.addBlurListener(this.boundBlurEvent);
     }
     logLifecycleEvent(logText, incommingEvent) { console.log(logText) };
     showToast(message) { this.myClientApp.alerting.showToastPopup( 'Becker Ticketer', message, { id: 'Becker-Ticketer-statusMsg' } ); }
-    onAppFocus () {
+    onAppFocus() {
         this.logLifecycleEvent('App Lifecycle Event: focus', true);
         this.showToast('App Focused');
     }
