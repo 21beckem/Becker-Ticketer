@@ -3,7 +3,6 @@ html, body {
     padding: 0;
     height: 100%;
     font-family: Roboto, sans-serif;
-    /* overflow-y: hidden; */
 }
 html *, body * {
     font-family: Roboto, sans-serif;
@@ -111,9 +110,6 @@ input[type="text"]:disabled, textarea:disabled {
     border-color: var(--gen-light-gray);
     color: var(--gen-light-gray);
 }
-input.wide {
-    width: calc(100% - 20px);
-}
 
 .submitBtn {
     padding: 10px 30px;
@@ -187,70 +183,34 @@ input[type="radio"]:checked+label.either_or {
     color: white;
 }
 
-#TDFormFrame {
-    position: absolute;
-    top: 0;
-    z-index: -1;
-    pointer-events: none;
-}
-
-
 /* Autocomplete */
 .autoComplete_wrapper {
-    position: relative;
+    width: fit-content;
 }
 .autoComplete_wrapper input {
-    width: calc(100% - 20px);
+    width: 100%;
     padding: 10px;
     border-radius: 10px;
     border: 1px solid rgb(36, 36, 36);
     box-shadow: 0px 0px 20px -10px #bfbfbf inset;
     color: black;
 }
-.autoComplete_wrapper input[data-value] {
-    filter: drop-shadow(1px 1px 0px var(--gen-green))
-        drop-shadow(-1px 1px 0px var(--gen-green))
-        drop-shadow(-1px -1px 0px var(--gen-green))
-        drop-shadow(1px -1px 0px var(--gen-green));
-}
-.autoComplete_wrapper:has(li) input {
-    border-radius: 10px 10px 0 0;
-}
-.autoComplete_wrapper:has(input[data-value]):before {
-    content: "\2713";
-    color: var(--gen-green);
-    position: absolute;
-    right: 12px;
-    top: 8px;
-    margin-right: .5em;
-    width: 0;
-    overflow: visible;
-    display: inline-block;
-    line-height: 24px;
-    z-index: 1;
-}
 .autoComplete_wrapper ul {
-    position: absolute;
-    font-size: 15px;
+    width: 100%;
     list-style-type: none;
     padding: 0;
     margin: 0;
     border-radius: 0 0 10px 10px;
     border: 1px solid rgb(36, 36, 36);
     border-top: 0;
-    box-shadow: 0 0 20px -10px #bfbfbf inset, 0 0 17px -5px black;
-    clip-path: inset(0 -10px -10px -10px);
+    box-shadow: 0px 0px 20px -10px #bfbfbf inset;
     color: black;
     background-color: white;
     overflow-y: scroll;
     max-height: 200px;
 }
-.autoComplete_wrapper ul:not(:has(li)) {
-    display: none;
-}
 .autoComplete_wrapper ul li {
-    box-shadow: 0px 0px 20px -8px #bfbfbf inset;
-    padding: 5px;
+    padding: 10px;
     cursor: pointer;
 }
 .autoComplete_wrapper ul li:hover {

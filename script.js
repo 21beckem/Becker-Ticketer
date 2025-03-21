@@ -1,7 +1,6 @@
 HTMLCollection.prototype.forEach = Array.from(this).forEach;
 let AccordianSections = document.getElementsByClassName("accordion");
 const _ = (el) => document.getElementById(el);
-const TDcontrol = new TDcontroler(_("TDFormFrame"));
 AccordianSections.forEach((el) => {
     if (el.classList.contains("active")) {
         el.nextElementSibling.style.height = (document.body.scrollHeight - 165) + "px";
@@ -26,8 +25,12 @@ AccordianSections.forEach((el) => {
 });
 function canIopenThisAccordionSection(elId) {
     if (elId == 'IdentifyAccordionBtn') return true; // always allow Identify tab to open
-    if (elId == 'AssistAccordionBtn' || elId == 'ReviewAccordionBtn') {
+    if (elId == 'AssistAccordionBtn') {
         if (SelectedPersonId == '') return false; // can't open Assist tab if no person is selected
+        return true;
+    }
+    if (elId == 'ReviewAccordionBtn') {
+        if (SelectedPersonId == '' || !AI_TicketHasBeenGenerated) return false; // can't open Review tab if no person is selected and if no KB article is selected
         return true;
     }
     return false;
@@ -82,6 +85,7 @@ function showLoader(yesOrNo) {
 
 let PersonSearchResults = [];
 let SelectedPersonId = '';
+let AI_TicketHasBeenGenerated = false;
 async function conductIdenitySearch(el) {
     let q = el.value;
     let t = el.getAttribute('Q-type');
@@ -90,6 +94,7 @@ async function conductIdenitySearch(el) {
     // reset the selection process
     SelectedPersonId = '';
     PersonSearchResults = [];
+    AI_TicketHasBeenGenerated = false;
 
     showLoader(true);
 
@@ -143,62 +148,9 @@ function selectPersonAndStartTicket(U_identifier) {
 
 async function generateTicketWithAI() {
     showLoader(true);
-    let ticketDescription = await TDcontrol.generateAIDescription(_('agentNotesTextarea').value);
-    _('DescriptionTextarea_ToSubmit').value = ticketDescription;
+    await new Promise(r => setTimeout(r, (Math.random() * 1000) + 1000));
+    AI_TicketHasBeenGenerated = true;
     showLoader(false);
 
     _('ReviewAccordionBtn').setActive();
 }
-
-
-let timeout;
-document.getElementsByClassName("autoComplete").forEach(inputEl => {
-    let autoComplete_wrapper = document.createElement("div");
-    autoComplete_wrapper.classList.add("autoComplete_wrapper");
-    inputEl.parentNode.insertBefore(autoComplete_wrapper, inputEl);
-    autoComplete_wrapper.appendChild(inputEl);
-
-    let resultsUl = document.createElement("ul");
-    autoComplete_wrapper.appendChild(resultsUl);
-
-    inputEl.addEventListener("input", function () {
-        if (inputEl.classList.contains("oneOfTheKBinputs")) {
-            document.getElementsByClassName('oneOfTheKBinputs').forEach(thisInputEl => {
-                thisInputEl.removeAttribute("data-value");
-                thisInputEl.value = inputEl.value;
-                thisInputEl.nextElementSibling.innerHTML = '';
-            });
-        }
-        resultsUl.innerHTML = "";
-        inputEl.removeAttribute("data-value");
-        clearTimeout(timeout);
-        let query = this.value.trim();
-
-        timeout = setTimeout(async () => {
-            await new Promise(r => setTimeout(r, 1));
-            const data = [{"caption":"Okta 400 Bad Request","subcaption":null,"value":"15584"},{"caption":"BYU Provo Duo and Okta Verify","subcaption":null,"value":"10766"},{"caption":"Error Message: 400 Bad Request","subcaption":null,"value":"15871"},{"caption":"New Pathway Portal Issues","subcaption":null,"value":"15867"},{"caption":"Sign In Process for New My.BYUI Online Students","subcaption":null,"value":"14571"},{"caption":"Okta 400 Bad Request","subcaption":null,"value":"15584"},{"caption":"BYU Provo Duo and Okta Verify","subcaption":null,"value":"10766"},{"caption":"Error Message: 400 Bad Request","subcaption":null,"value":"15871"},{"caption":"New Pathway Portal Issues","subcaption":null,"value":"15867"},{"caption":"Sign In Process for New My.BYUI Online Students","subcaption":null,"value":"14571"},{"caption":"Okta 400 Bad Request","subcaption":null,"value":"15584"},{"caption":"BYU Provo Duo and Okta Verify","subcaption":null,"value":"10766"},{"caption":"Error Message: 400 Bad Request","subcaption":null,"value":"15871"},{"caption":"New Pathway Portal Issues","subcaption":null,"value":"15867"},{"caption":"Sign In Process for New My.BYUI Online Students","subcaption":null,"value":"14571"}];
-
-            // set Ul width
-            resultsUl.style.width = (inputEl.offsetWidth - 2) + "px";
-
-            data.forEach(item => {
-                let div = document.createElement("li");
-                div.textContent = item.caption;
-                div.classList.add("result-item");
-                div.addEventListener("click", () => {
-                    if (inputEl.classList.contains("oneOfTheKBinputs")) {
-                        document.getElementsByClassName('oneOfTheKBinputs').forEach(thisInputEl => {
-                            thisInputEl.setAttribute("data-value", item.value);
-                            thisInputEl.value = item.caption;
-                            thisInputEl.nextElementSibling.innerHTML = '';
-                        });
-                    }
-                    inputEl.setAttribute("data-value", item.value);
-                    inputEl.value = item.caption;
-                    resultsUl.innerHTML = "";
-                });
-                resultsUl.appendChild(div);
-            });
-        }, 200); // Wait 300ms before making API call
-    });
-});

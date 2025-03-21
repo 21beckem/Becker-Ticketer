@@ -20,6 +20,8 @@
             <p style="color: gray;">Searching as <span>...</span></p>
             <br>
             <button class="submitBtn" disabled id="IdenifySearchButton" onclick="conductIdenitySearch(_('IdenifySearchQuery'))">Search</button>
+            <br>
+            <input id="KB_Input">
         </center>
         <div id="peopleReultsList"></div>
         
@@ -28,7 +30,7 @@
     <button id="AssistAccordionBtn" class="accordion">Assist</button>
     <div class="accordion-panel">
         <label for="KBSearchQuery">Knowledge Base Article</label>
-        <input id="KBSearchQuery" name="KBSearchQuery" class="autoComplete oneOfTheKBinputs" type="text" placeholder="Start typing..." autocomplete="off" />
+        <input type="text" id="KBSearchQuery" name="KBSearchQuery" placeholder="Start typing..." style="width: calc(100% - 20px);"><br>
 
         <label for="agentNotesTextarea">Agent Notes</label>
         <textarea name="agentNotesTextarea" id="agentNotesTextarea" style="height: 300px;" placeholder="Enter detailed notes about the ticket. Include all relevant information, such as user-reported issues, troubleshooting steps taken, error messages, and any supplementary details that could assist in resolving the issue efficiently.  🚨 Important: DO NOT include personally identifiable information (PII) such as names, phone numbers, email addresses, dates of birth (DOB), Social Security numbers (SSNs), or any sensitive data (e.g., grades, honor code issues, etc.)."></textarea>
@@ -41,7 +43,7 @@
     <button id="ReviewAccordionBtn" class="accordion">Review</button>
     <div class="accordion-panel">
         <label for="RequesterName_toSubmit">Requester</label>
-        <input type="text" id="RequesterName_toSubmit" name="RequesterName_toSubmit" disabled class="wide">
+        <input type="text" id="RequesterName_toSubmit" name="RequesterName_toSubmit" disabled style="width: calc(100% - 20px);">
 
         <label for="Type_toSubmit">Type</label>
         <div class="either_or">
@@ -52,7 +54,7 @@
         </div>
 
         <label for="Responsible_toSubmit">Responsible</label>
-        <input type="text" id="Responsible_toSubmit" name="Responsible_toSubmit" class="wide">
+        <input type="text" id="Responsible_toSubmit" name="Responsible_toSubmit" style="width: calc(100% - 20px);">
 
         <label for="Status_toSubmit">Status</label>
         <div class="either_or">
@@ -63,7 +65,7 @@
         </div>
 
         <label for="KB_toSubmit">Knowledge Base Article</label>
-        <input id="KB_toSubmit" name="KB_toSubmit" class="autoComplete oneOfTheKBinputs" type="text" placeholder="Start typing..." autocomplete="off" />
+        <input type="text" id="KB_toSubmit" name="KB_toSubmit" style="width: calc(100% - 20px);">
         
         <label for="DescriptionTextarea_ToSubmit">Description</label>
         <textarea name="DescriptionTextarea_ToSubmit" id="DescriptionTextarea_ToSubmit" style="height: 300px;"></textarea>
@@ -82,9 +84,6 @@
         </div>
     </div>
 
-    <iframe id="TDFormFrame" src="https://us1.teamdynamix.com/tdapp/app/form/start?c=ODFmNmM0NTAtODZjYi00N2VmLWExYTAtOTc1MWY5NTg0NjYz&t=SGlyN2dBPT1PbjgrUHpNQkE3eW8zTWtQbHNOdXpyZTByWXE3RU9IOW1IUmp4WURpMlhMaCtsQzlJMmE4Qk4rNEVCUDlhbE9sUlhIT0pIUVNWVXhQYlNoWTl3eVRWUT09" width="98%" height="500px"></iframe>
-
-    <script src="TDcontrol.js"></script>
     <script src="script.js"></script>
 </body>
 
