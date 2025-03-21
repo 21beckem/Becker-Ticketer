@@ -18,7 +18,7 @@ class TDcontroler {
         let desc = await this.sendMessageToIframe('getTextarea', 'The full details of a ticket that have been formatted and cleaned up from agent notes by our AI model.');
         // let title = await this.sendMessageToIframe('getInput', 'Enter ticket title');
         // let classification = await this.sendMessageToIframe('getInput', 'There is no PLACEHOLDER TO SELECT CLASSIFICATION !!! ');
-        console.log(desc);
+        // console.log(desc);
         return desc;
     }
     async sendMessageToIframe(action, inputPlaceholder, valueToSet=null) {
