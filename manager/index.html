@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Incomplete Ticket Manager</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Becker Ticket Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Roboto, sans-serif;
+    background-color: #F3F4F6;
+}
 :root {
     --accordion-transition: none;
     --gen-orange: #FF451A;
@@ -15,66 +21,151 @@
     --gen-blue: #2A60C8;
     --gen-green: #77DD22;
 }
+header {
+    padding: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    background-color: var(--gen-dark-gray);
+}
 button {
     padding: 10px 30px;
-    margin-bottom: 20px;
-    background-color: white;
+    background-color: transparent;
     color: var(--gen-light-gray);
     border: 1px solid var(--gen-light-gray);
+    color: var(--gen-light-gray);
     cursor: pointer;
+    transition: transform 0.05s ease;
+}
+button:hover {
+    transform: scale(1.05);
+}
+h1 {
+    color: white;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    margin: 0;
+}
+main {
+    padding: 1rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    background-color: white;
+    border-radius: 0.25rem;
+    max-width: 42rem;
+    margin-top: 1.5rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+h2 {
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    margin-bottom: 1rem;
+    color: var(--gen-dark-gray);
+}
+body:has(main.ticketsToComplete ul li) main.noMoreTickets {
+    display: none;
+}
+main.ticketsToComplete:not(:has(ul li)) {
+    display: none;
+}
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+li {
+    padding: 1rem;
+    background-color: #F3F4F6;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+a[href] {
+    color: var(--gen-blue);
 }
     </style>
 </head>
-<body class="bg-gray-100">
-    <header class="bg-blue-600 p-4 flex justify-between items-center shadow-md" style="background-color: var(--gen-dark-gray);">
-        <h1 class="text-xl font-bold text-white">Becker Tickets</h1>
-        <div class="flex gap-4">
-            <button class="px-4 py-2 flex items-center" style="color: var(--gen-light-gray);">
-                <i class="fas fa-plus-square mr-2"></i> New Ticket
+<body>
+    <header>
+        <h1>Becker Ticket Manager</h1>
+        <div style="display: flex; gap: 1rem;">
+            <button onclick="openPopupWindow('../index.html', 325, 700);">
+                <i class="fas fa-plus-square"></i> New Ticket
             </button>
-            <button class="px-4 py-2 flex items-center" style="color: var(--gen-light-gray);">
-                <i class="fas fa-user-plus mr-2"></i> New Person
+            <button onclick="openPopupWindow('https://td.byui.edu/TDNext/Apps/People/PersonNew');">
+                <i class="fas fa-user-plus"></i> New Person
             </button>
-            <button class="px-4 py-2 flex items-center" style="color: var(--gen-light-gray);">
-                <i class="fas fa-folder-open mr-2"></i> Created Tickets
+            <button onclick="openPopupWindow('https://td.byui.edu/TDNext/Apps/Reporting/ReportViewer.aspx?ReportID=21581&IsDrillDown=1&PromptValue=&Key=10');">
+                <i class="fas fa-folder-open"></i> Created Tickets
             </button>
-            <button class="px-4 py-2 flex items-center" style="color: var(--gen-light-gray);">
-                <i class="fas fa-info-circle mr-2"></i> About
+            <button onclick="window.location.reload();">
+                <i class="fa-solid fa-arrows-rotate"></i> Refresh
             </button>
         </div>
     </header>
-    <main class="max-w-2xl mx-auto mt-6 p-4 bg-white shadow-md rounded">
-        <h2 class="text-2xl font-semibold mb-4">Incomplete Tickets</h2>
-        <ul id="ticketList" class="space-y-4">
+    <main class="ticketsToComplete">
+        <h2>Incomplete Tickets</h2>
+        <ul id="ticketList">
             <!-- Tickets will be dynamically added here -->
         </ul>
     </main>
+    <main class="noMoreTickets" style="padding: 50px 0;">
+        <center>
+            <h2>No Incomplete Tickets</h2>
+            <i style="font-size: 150px; color: var(--gen-green); margin: 50px;" class="fa-regular fa-circle-check"></i>
+            <p>All tickets are complete.</p>
+        </center>
+    </main>
 
     <script>
-        // Sample tickets data
-        const tickets = [
-            { id: 1, title: "Fix server issue", status: "incomplete" },
-            { id: 2, title: "Update software", status: "incomplete" },
-            { id: 3, title: "Reset user password", status: "complete" }
-        ];
+// Sample tickets data
+const tickets = [
+    { name: "Michael Becker", uId: "020bfd25-06c8-ee11-9f01-c89665346b33", timestamp: 1742843440322 },
+    { name: "Aleah Clyde", uId: "bae72298-d6bb-ec11-997e-c89665346b33", timestamp: 1742843440322 },
+    { name: "Daniel Mann", uId: "f65f2ca2-efe9-ea11-9112-005056ac5ec6", timestamp: 1742843440322 },
+];
 
-        function loadTickets() {
-            const list = document.getElementById("ticketList");
-            list.innerHTML = "";
-            tickets.filter(t => t.status === "incomplete").forEach(ticket => {
-                const li = document.createElement("li");
-                li.className = "p-4 bg-gray-100 rounded flex justify-between items-center";
-                li.innerHTML = `<span>${ticket.title}</span> <button class="px-4 py-2 flex items-center" style="border-color: var(--gen-orange); color: var(--gen-orange)">Complete</button>`;
-                list.appendChild(li);
-            });
-        }
-        
-        document.addEventListener("DOMContentLoaded", loadTickets);
-        
-        // Dropdown menu toggle
-        document.querySelector(".relative").addEventListener("click", () => {
-            document.getElementById("dropdown").classList.toggle("hidden");
-        });
+function loadTickets() {
+    const list = document.getElementById("ticketList");
+    list.innerHTML = "";
+    tickets.forEach(ticket => {
+        const li = document.createElement("li");
+        li.className = "p-4 bg-gray-100 rounded flex justify-between items-center";
+        li.innerHTML = `
+            <span style="flex:3"><a href="javascript:openPersonProfile('${ticket.uId}')">${ticket.name}</a></span>
+            <span style="flex:2">${niceDate(ticket.timestamp)}</span>
+            <button onclick="openIncompleteTicket('${ticket.uId}')" style="border-color: var(--gen-orange); color: var(--gen-orange)">
+                Complete
+            </button>`;
+        list.appendChild(li);
+    });
+}
+function niceDate(timestamp) {
+    const date = new Date(timestamp);
+    return `${date.getHours()}:${date.getMinutes()} - ${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+}
+document.addEventListener("DOMContentLoaded", loadTickets);
+
+function openPersonProfile(uId) {
+    openPopupWindow(`https://td.byui.edu/TDNext/Apps/People/PersonDet.aspx?U=${uId}`, 800, 760);
+}
+function openIncompleteTicket(uId) {
+    openPopupWindow('../index.html' + window.location.search + '&incomplete=' + uId, 325, 700);
+}
+
+function openPopupWindow(url, width = 800, height = 600) {
+    const left = (window.innerWidth - width) / 2;
+    const top = (window.innerHeight - height) / 2;
+    const features = `width=${width},height=${height},top=${top},left=${left}, menubar=no, location=yes"`;
+    const popupWindow = window.open(url, "_blank", features);
+    popupWindow.focus();
+
+    setTimeout(loadTickets, 1000);
+}
     </script>
 </body>
 </html>
