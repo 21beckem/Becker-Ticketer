@@ -1,5 +1,6 @@
 class GenAuth {
     constructor(connectingUpdatesCallback=(val) =>{console.log(val)}) {
+        this.genesysConnected = null;
         this.connectingUpdatesCallback = connectingUpdatesCallback;
         this.redirectUri = window.location.protocol + "//" + window.location.hostname + window.location.pathname;
         console.log("***** RedirectURI *****: " + this.redirectUri);
@@ -11,8 +12,20 @@ class GenAuth {
         } else if ( window.location.hash.length !== 0 ) {
             this.connectingUpdatesCallback("Authenticated!");
             this.integrationQueryString = window.location.hash.substring(1);
+        } else {
+            console.log("Integration Query String is empty.");
+            this.genesysConnected = false;
+            this.connectedCallback(this.genesysConnected);
+            return;
         }
-        this.appParams = this.parseAppParameters(this.integrationQueryString);
+        try {
+            this.appParams = this.parseAppParameters(this.integrationQueryString)
+        } catch (e) {
+            console.log("Unable to decode the integration query string.");
+            this.genesysConnected = false;
+            this.connectedCallback(this.genesysConnected);
+            return;
+        }
         
         // Create and initialize an instance of Client App SDK
         this.myClientApp = new window.purecloud.apps.ClientApp({
@@ -44,7 +57,14 @@ class GenAuth {
         this.userMe = null;
         this.conversation = null;
         
-        this.initializeApplication();
+        try {
+            this.initializeApplication();
+        } catch (e) {
+            console.log(e);
+            this.genesysConnected = false;
+            this.connectedCallback(this.genesysConnected);
+            return;
+        }
         
         //
         // Lifecycle Events
@@ -56,6 +76,8 @@ class GenAuth {
             this.initializeApplication();
         });
         this.myClientApp.lifecycle.addStopListener(() => {
+            this.genesysConnected = false;
+            try { BackMeUp.saveTicketLocally(); } catch (e) {}
             this.logLifecycleEvent('App Lifecycle Event: stop', true);
         
             // Clean up other, persistent listeners
@@ -77,8 +99,12 @@ class GenAuth {
         });
         this.myClientApp.lifecycle.addFocusListener(this.boundFocusEvent);
         this.myClientApp.lifecycle.addBlurListener(this.boundBlurEvent);
+        
+        this.genesysConnected = true;
+        this.connectedCallback(this.genesysConnected);
     }
-    logLifecycleEvent(logText, incommingEvent) { console.log(logText) };
+    connectedCallback(val) { console.log('Genesys Connected: ' + val); }
+    logLifecycleEvent(logText, incommingEvent) { console.log(logText) }
     showToast(message) { this.myClientApp.alerting.showToastPopup( 'Becker Ticketer', message, { id: 'Becker-Ticketer-statusMsg' } ); }
     onAppFocus() {
         this.logLifecycleEvent('App Lifecycle Event: focus', true);

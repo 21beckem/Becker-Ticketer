@@ -20,6 +20,7 @@ AccordianSections.forEach((el) => {
         if (canIopenThisAccordionSection(el.id)) {
             AccordianSections.forEach((e) => e.open(false));
             el.open(true);
+            BackMeUp.includeVar('ActiveAccordion', el.id);
         }
     }
     el.addEventListener("click", el.setActive );
@@ -82,13 +83,17 @@ function showLoader(yesOrNo) {
 
 let PersonSearchResults = [];
 let SelectedPersonId = '';
+function setSelectedPersonId(id) {
+    SelectedPersonId = id;
+    BackMeUp.includeVar('SelectedPersonId', id);
+}
 async function conductIdenitySearch(el) {
     let q = el.value;
     let t = el.getAttribute('Q-type');
     if (q.trim() == '' || t == 'X') return;
 
     // reset the selection process
-    SelectedPersonId = '';
+    setSelectedPersonId('');
     PersonSearchResults = [];
 
     showLoader(true);
@@ -104,11 +109,19 @@ async function conductIdenitySearch(el) {
     ];
 
     // display Results
+    BackMeUp.includeVar('PersonSearchResults', PersonSearchResults);
+    populateRequestorCards();
+}
+function populateRequestorCards() {
     const peopleReultsList = _('peopleReultsList');
     peopleReultsList.innerHTML = '';
     PersonSearchResults.forEach((result) => {
         let personCard = document.createElement('div');
         personCard.className = 'personCard';
+        if (result[0] == SelectedPersonId) {
+            personCard.classList.add('selected');
+            document.querySelector('#IdentifyAccordionBtn span').innerHTML = ': ' + result[1];
+        }
         personCard.setAttribute('id', result[0]);
         personCard.innerHTML = `
             <h3 onclick="openPersonDetails('`+result[0]+`')">`+result[1]+`</h3>
@@ -130,7 +143,7 @@ async function openPersonDetails(U_identifier) {
 
 function selectPersonAndStartTicket(U_identifier) {
     // highlight that person's card
-    SelectedPersonId = U_identifier;
+    setSelectedPersonId(U_identifier);
     _('peopleReultsList').children.forEach(personCard => personCard.classList.remove('selected'));
     document.querySelector('#peopleReultsList div.personCard[id="'+SelectedPersonId+'"]').classList.add('selected');
     
@@ -205,3 +218,13 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
         }, 200); // Wait 300ms before making API call
     });
 });
+
+
+
+
+// Restore Local Ticket
+if (BackMeUp.restoreLocalTicket()) {
+    SelectedPersonId = BackMeUp.includedVars['SelectedPersonId'];
+    PersonSearchResults = BackMeUp.includedVars['PersonSearchResults'];
+    populateRequestorCards();
+}
