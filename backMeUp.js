@@ -6,10 +6,21 @@ class BackMeUp {
         });
     }
     static actuallyInit(genConnected) {
-        BackMeUp.ticketId = 'NON_INTERACTION__TEST';
-        // BackMeUp.ticketId = 'NON_INTERACTION_' + Math.random().toString(36).substring(2, 15) + (new Date()).getTime().toString(36);
+        BackMeUp.ticketId = 'NON_INTERACTION_' + Math.random().toString(36).substring(2, 15) + (new Date()).getTime().toString(36);
+        const urlSearch = new URLSearchParams(window.location.search.slice(1));
+
         if (genConnected) {
             BackMeUp.ticketId = GenesysAuth.appParams.gcConversationId;
+            if (GenesysAuth.appParams.ticketId) { // check if reloading a ticket from local storage
+                BackMeUp.ticketId = GenesysAuth.appParams.ticketId;
+            }
+        } else {
+            // if not running in Genesys Cloud, try to get the ticketId from the URL
+            if (urlSearch.has('ticketId')) {
+                BackMeUp.ticketId = urlSearch.get('ticketId');
+            } else {
+                window.location.hash = `#ticketId=${BackMeUp.ticketId}`;
+            }
         }
         console.log("BackMeUp Ticket ID: " + BackMeUp.ticketId);
 

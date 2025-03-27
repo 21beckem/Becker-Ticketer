@@ -93,7 +93,7 @@ a[href] {
     <header>
         <h1>Becker Ticket Manager</h1>
         <div style="display: flex; gap: 1rem;">
-            <button onclick="openPopupWindow('../index.html', 325, 700);">
+            <button onclick="openNewTicket();">
                 <i class="fas fa-plus-square"></i> New Ticket
             </button>
             <button onclick="openPopupWindow('https://td.byui.edu/TDNext/Apps/People/PersonNew');">
@@ -122,12 +122,23 @@ a[href] {
     </main>
 
     <script>
-// Sample tickets data
-const tickets = [
-    { name: "Michael Becker", uId: "020bfd25-06c8-ee11-9f01-c89665346b33", timestamp: 1742843440322 },
-    { name: "Aleah Clyde", uId: "bae72298-d6bb-ec11-997e-c89665346b33", timestamp: 1742843440322 },
-    { name: "Daniel Mann", uId: "f65f2ca2-efe9-ea11-9112-005056ac5ec6", timestamp: 1742843440322 },
-];
+// Load tickets from local storage
+const tickets = Object.keys(localStorage).filter(x => x.startsWith('Becker_Ticker_')).map(x => {
+    let t = JSON.parse(localStorage.getItem(x));
+    if (t.includedVars.length == 0) { // no included vars which means no person was selected. Ticket is useless
+        localStorage.removeItem(x);
+        return null;
+    }
+    if (!t.includedVars.SelectedPersonId) { // if selected person id is not set, ticket is useless
+        localStorage.removeItem(x);
+        return null;
+    }
+    // valid ticket, make some information easier to access
+    t.uId = t.includedVars.SelectedPersonId;
+    t.ticketId = x.split('Becker_Ticker_')[1];
+    t.person = t.includedVars.PersonSearchResults.filter(x => x[0] == t.uId)[0];
+    return t;
+});
 
 function loadTickets() {
     const list = document.getElementById("ticketList");
@@ -136,8 +147,11 @@ function loadTickets() {
         const li = document.createElement("li");
         li.className = "p-4 bg-gray-100 rounded flex justify-between items-center";
         li.innerHTML = `
-            <span style="flex:3"><a href="javascript:openPersonProfile('${ticket.uId}')">${ticket.name}</a></span>
+            <span style="flex:3"><a href="javascript:openPersonProfile('${ticket.includedVars.SelectedPersonId}')">${ticket.person[1]}</a></span>
             <span style="flex:2">${niceDate(ticket.timestamp)}</span>
+            <button onclick="removeTicket('${ticket.ticketId}')" style="border-color: var(--gen-dark-gray); color: var(--gen-dark-gray); margin-right: 5px">
+                Delete
+            </button>
             <button onclick="openIncompleteTicket('${ticket.uId}')" style="border-color: var(--gen-orange); color: var(--gen-orange)">
                 Complete
             </button>`;
@@ -153,8 +167,28 @@ document.addEventListener("DOMContentLoaded", loadTickets);
 function openPersonProfile(uId) {
     openPopupWindow(`https://td.byui.edu/TDNext/Apps/People/PersonDet.aspx?U=${uId}`, 800, 760);
 }
+const WindowSearch = window.location.search.split('?')[1];
+function openNewTicket() {
+    openPopupWindow('../?' + WindowSearch, 325, 700);
+}
+function removeTicket(ticketId) {
+    if (confirm("Are you sure you want to remove this ticket?")) {
+        localStorage.removeItem('Becker_Ticker_' + ticketId);
+        window.location.reload();
+    }
+}
 function openIncompleteTicket(uId) {
-    openPopupWindow('../index.html' + window.location.search + '&incomplete=' + uId, 325, 700);
+    let thisTicket = tickets.filter(x => x.uId == uId)[0];
+    let search = WindowSearch;
+    if (search.includes('gcConversationId=')) {
+        search = search.replace('gcConversationId=', 'gcConversationId=' + thisTicket.includedVars.gcConversationId);
+    } else {
+        search += '&gcConversationId=' + thisTicket.includedVars.gcConversationId;
+    }
+    search += '&ticketId=' + thisTicket.ticketId;
+    let URL = '../?' + search;
+    console.log(URL);
+    openPopupWindow(URL, 325, 700);
 }
 
 function openPopupWindow(url, width = 800, height = 600) {

@@ -224,7 +224,7 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
 
 // Restore Local Ticket
 if (BackMeUp.restoreLocalTicket()) {
-    SelectedPersonId = BackMeUp.includedVars['SelectedPersonId'];
-    PersonSearchResults = BackMeUp.includedVars['PersonSearchResults'];
+    SelectedPersonId = BackMeUp.includedVars['SelectedPersonId'] || '';
+    PersonSearchResults = BackMeUp.includedVars['PersonSearchResults'] || [];
     populateRequestorCards();
 }

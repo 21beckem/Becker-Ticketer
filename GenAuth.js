@@ -6,10 +6,10 @@ class GenAuth {
         console.log("***** RedirectURI *****: " + this.redirectUri);
         
         this.integrationQueryString = "";
-        if ( window.location.search.length !== 0 ) {
+        if ( window.location.search.includes('gcConversationId=') ) {
             this.connectingUpdatesCallback("Authenticating...");
             this.integrationQueryString = window.location.search.substring(1);
-        } else if ( window.location.hash.length !== 0 ) {
+        } else if ( window.location.hash.includes('access_token=') ) {
             this.connectingUpdatesCallback("Authenticated!");
             this.integrationQueryString = window.location.hash.substring(1);
         } else {
@@ -65,6 +65,7 @@ class GenAuth {
             this.connectedCallback(this.genesysConnected);
             return;
         }
+        BackMeUp.includeVar('gcConversationId', this.appParams.gcConversationId);
         
         //
         // Lifecycle Events
@@ -147,6 +148,9 @@ class GenAuth {
                 } else if (currParam[0] === 'ClientId') {
                     appParams.clientId = decodeURIComponent(currParam[1]);
                     console.log("Query Parameter ClientId = " + appParams.clientId);
+                } else if (currParam[0] === 'ticketId') {
+                    appParams.ticketId = decodeURIComponent(currParam[1]);
+                    console.log("Query Parameter ticketId = " + appParams.ticketId);
                 } else if (currParam[0] === 'state') {
                     console.log("Found 'state' query parameter from implicit grant redirect");
                     var stateValue = currParam[1];
