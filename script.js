@@ -175,6 +175,7 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
     let resultsUl = document.createElement("ul");
     autoComplete_wrapper.appendChild(resultsUl);
 
+
     inputEl.addEventListener("input", function () {
         if (inputEl.classList.contains("oneOfTheKBinputs")) {
             document.getElementsByClassName('oneOfTheKBinputs').forEach(thisInputEl => {
@@ -218,6 +219,24 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
         }, 200); // Wait 300ms before making API call
     });
 });
+document.addEventListener("click", (e) => {
+    let foundFocused = null;
+    let wrappers = document.querySelectorAll("div.autoComplete_wrapper");
+    for (let i = 0; i < wrappers.length; i++) {
+        const wrapper = wrappers[i];
+        if (wrapper.contains(e.target)) {
+            // this is the selected input, none others should be focused
+            foundFocused = wrapper;
+            wrapper.classList.add("focused");
+            break;
+        }
+    }
+    wrappers.forEach(wrapper => {
+        if (wrapper !== foundFocused) {
+            wrapper.classList.remove("focused");
+        }
+    });
+})
 
 
 

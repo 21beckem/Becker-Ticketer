@@ -207,13 +207,16 @@ input[type="radio"]:checked+label.either_or {
     box-shadow: 0px 0px 20px -10px #bfbfbf inset;
     color: black;
 }
+.autoComplete_wrapper:not(.focused) ul {
+    display: none;
+}
 .autoComplete_wrapper input[data-value] {
     filter: drop-shadow(1px 1px 0px var(--gen-green))
         drop-shadow(-1px 1px 0px var(--gen-green))
         drop-shadow(-1px -1px 0px var(--gen-green))
         drop-shadow(1px -1px 0px var(--gen-green));
 }
-.autoComplete_wrapper:has(li) input {
+.autoComplete_wrapper.focused:has(li) input {
     border-radius: 10px 10px 0 0;
 }
 .autoComplete_wrapper:has(input[data-value]):before {
