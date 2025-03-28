@@ -7,19 +7,17 @@ class BackMeUp {
     }
     static actuallyInit(genConnected) {
         BackMeUp.ticketId = 'NON_INTERACTION_' + Math.random().toString(36).substring(2, 15) + (new Date()).getTime().toString(36);
-        const urlSearch = new URLSearchParams(window.location.search.slice(1));
 
-        if (genConnected) {
-            BackMeUp.ticketId = GenesysAuth.appParams.gcConversationId;
-            if (GenesysAuth.appParams.ticketId) { // check if reloading a ticket from local storage
-                BackMeUp.ticketId = GenesysAuth.appParams.ticketId;
-            }
+        if (String( sessionStorage.getItem('open_this_becker_ticket_now') ) != 'null') { // this is a popup window and I need to open a specific ticket
+            console.log('opening ticket from local storage');
+            BackMeUp.ticketId = sessionStorage.getItem('open_this_becker_ticket_now');
+            sessionStorage.removeItem('open_this_becker_ticket_now');
         } else {
-            // if not running in Genesys Cloud, try to get the ticketId from the URL
-            if (urlSearch.has('ticketId')) {
-                BackMeUp.ticketId = urlSearch.get('ticketId');
-            } else {
-                window.location.hash = `#ticketId=${BackMeUp.ticketId}`;
+            if (genConnected) {
+                if (GenesysAuth.appParams.gcConversationId != '') {
+                    console.log('opening ticket from Genesys');
+                    BackMeUp.ticketId = GenesysAuth.appParams.gcConversationId;
+                }
             }
         }
         console.log("BackMeUp Ticket ID: " + BackMeUp.ticketId);

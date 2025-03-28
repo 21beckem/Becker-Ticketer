@@ -65,7 +65,11 @@ class GenAuth {
             this.connectedCallback(this.genesysConnected);
             return;
         }
-        BackMeUp.includeVar('gcConversationId', this.appParams.gcConversationId);
+        setTimeout(() => {
+            try {
+                BackMeUp.includeVar('gcConversationId', this.appParams.gcConversationId);
+            } catch (e) {}
+        },2000)
         
         //
         // Lifecycle Events
@@ -173,7 +177,7 @@ class GenAuth {
         this.client.loginImplicitGrant(this.appParams.clientId, this.redirectUri, { state: this.integrationQueryString })
             .then((data) => {
                 // User Authenticated
-                console.log("User Authenticated: " + JSON.stringify(data));
+                console.log("User Authenticated:", data);
     
                 this.connectingUpdatesCallback("Querying User...");
     

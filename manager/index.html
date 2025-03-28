@@ -153,7 +153,7 @@ function loadTickets() {
                 Delete
             </button>
             <button onclick="openIncompleteTicket('${ticket.uId}')" style="border-color: var(--gen-orange); color: var(--gen-orange)">
-                Complete
+                Open
             </button>`;
         list.appendChild(li);
     });
@@ -179,14 +179,17 @@ function removeTicket(ticketId) {
 }
 function openIncompleteTicket(uId) {
     let thisTicket = tickets.filter(x => x.uId == uId)[0];
+    console.log(thisTicket);
     let search = WindowSearch;
-    if (search.includes('gcConversationId=')) {
-        search = search.replace('gcConversationId=', 'gcConversationId=' + thisTicket.includedVars.gcConversationId);
-    } else {
-        search += '&gcConversationId=' + thisTicket.includedVars.gcConversationId;
+    if (thisTicket.includedVars.gcConversationId) { // add conversation id to the URL if it exists in the ticket
+        if (search.includes('gcConversationId=')) {
+            search = search.replace('gcConversationId=', 'gcConversationId=' + thisTicket.includedVars.gcConversationId);
+        } else {
+            search += '&gcConversationId=' + thisTicket.includedVars.gcConversationId;
+        }
     }
-    search += '&ticketId=' + thisTicket.ticketId;
     let URL = '../?' + search;
+    sessionStorage.setItem('open_this_becker_ticket_now', thisTicket.ticketId);
     console.log(URL);
     openPopupWindow(URL, 325, 700);
 }
