@@ -201,13 +201,13 @@ class GenAuth {
     
                 this.myClientApp.lifecycle.bootstrapped();
     
-                this.myClientApp.alerting.showToastPopup(
-                    'Becker Ticketer',
-                    'Bootstrap Complete', {
-                        id: 'Becker-Ticketer-statusMsg',
-                        type: 'success'
-                    }
-                );
+                // this.myClientApp.alerting.showToastPopup(
+                //     'Becker Ticketer',
+                //     'Bootstrap Complete', {
+                //         id: 'Becker-Ticketer-statusMsg',
+                //         type: 'success'
+                //     }
+                // );
     
                 this.logLifecycleEvent('Notified Genesys Cloud of Successful App Bootstrap', false);
             }).catch((err) => {

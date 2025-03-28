@@ -189,7 +189,7 @@ function openIncompleteTicket(uId) {
         }
     }
     let URL = '../?' + search;
-    sessionStorage.setItem('open_this_becker_ticket_now', thisTicket.ticketId);
+    localStorage.setItem('open_this_becker_ticket_now', thisTicket.ticketId);
     console.log(URL);
     openPopupWindow(URL, 325, 700);
 }

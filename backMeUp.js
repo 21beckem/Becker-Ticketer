@@ -8,10 +8,10 @@ class BackMeUp {
     static actuallyInit(genConnected) {
         BackMeUp.ticketId = 'NON_INTERACTION_' + Math.random().toString(36).substring(2, 15) + (new Date()).getTime().toString(36);
 
-        if (String( sessionStorage.getItem('open_this_becker_ticket_now') ) != 'null') { // this is a popup window and I need to open a specific ticket
+        if (String( localStorage.getItem('open_this_becker_ticket_now') ) != 'null') { // this is a popup window and I need to open a specific ticket
             console.log('opening ticket from local storage');
-            BackMeUp.ticketId = sessionStorage.getItem('open_this_becker_ticket_now');
-            sessionStorage.removeItem('open_this_becker_ticket_now');
+            BackMeUp.ticketId = localStorage.getItem('open_this_becker_ticket_now');
+            localStorage.removeItem('open_this_becker_ticket_now');
         } else {
             if (genConnected) {
                 if (GenesysAuth.appParams.gcConversationId != '') {
