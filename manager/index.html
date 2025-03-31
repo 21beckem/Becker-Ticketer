@@ -87,13 +87,36 @@ li {
 a[href] {
     color: var(--gen-blue);
 }
+overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+overlay .ticket-window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 5px;
+    transform: translate(-50%, -50%);
+    background-color: var(--gen-dark-gray);
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    color: var(--gen-light-gray);
+}
     </style>
 </head>
 <body>
     <header>
         <h1>Becker Ticket Manager</h1>
         <div style="display: flex; gap: 1rem;">
-            <button onclick="openNewTicket();">
+            <button onclick="popupTicket.new();">
                 <i class="fas fa-plus-square"></i> New Ticket
             </button>
             <button onclick="openPopupWindow('https://td.byui.edu/TDNext/Apps/People/PersonNew');">
@@ -117,30 +140,41 @@ a[href] {
         <center>
             <h2>No Incomplete Tickets</h2>
             <i style="font-size: 150px; color: var(--gen-green); margin: 50px;" class="fa-regular fa-circle-check"></i>
-            <p>All tickets are complete.</p>
+            <p>All tickets have been completed.</p>
         </center>
     </main>
 
+    <overlay style="display: none;">
+        <div class="ticket-window">
+            <div style="width: 20px; padding: 10px; text-align: center; cursor: pointer; user-select: none;" onclick="popupTicket.close()"><i class="fa-solid fa-xmark"></i></div>
+            <iframe id="ticketFrame" src="" frameborder="0" width="325" height="700"></iframe>
+        </div>
+    </overlay>
+
     <script>
 // Load tickets from local storage
-const tickets = Object.keys(localStorage).filter(x => x.startsWith('Becker_Ticker_')).map(x => {
-    let t = JSON.parse(localStorage.getItem(x));
-    if (t.includedVars.length == 0) { // no included vars which means no person was selected. Ticket is useless
-        localStorage.removeItem(x);
-        return null;
-    }
-    if (!t.includedVars.SelectedPersonId) { // if selected person id is not set, ticket is useless
-        localStorage.removeItem(x);
-        return null;
-    }
-    // valid ticket, make some information easier to access
-    t.uId = t.includedVars.SelectedPersonId;
-    t.ticketId = x.split('Becker_Ticker_')[1];
-    t.person = t.includedVars.PersonSearchResults.filter(x => x[0] == t.uId)[0];
-    return t;
-});
+let tickets = [];
 
 function loadTickets() {
+    // read tickets from local storage
+    tickets = Object.keys(localStorage).filter(x => x.startsWith('Becker_Ticker_')).map(x => {
+        let t = JSON.parse(localStorage.getItem(x));
+        if (t.includedVars.length == 0) { // no included vars which means no person was selected. Ticket is useless
+            localStorage.removeItem(x);
+            return null;
+        }
+        if (!t.includedVars.SelectedPersonId) { // if selected person id is not set, ticket is useless
+            localStorage.removeItem(x);
+            return null;
+        }
+        // valid ticket, make some information easier to access
+        t.uId = t.includedVars.SelectedPersonId;
+        t.ticketId = x.split('Becker_Ticker_')[1];
+        t.person = t.includedVars.PersonSearchResults.filter(x => x[0] == t.uId)[0];
+        return t;
+    });
+    
+    // populate list
     const list = document.getElementById("ticketList");
     list.innerHTML = "";
     tickets.forEach(ticket => {
@@ -152,7 +186,7 @@ function loadTickets() {
             <button onclick="removeTicket('${ticket.ticketId}')" style="border-color: var(--gen-dark-gray); color: var(--gen-dark-gray); margin-right: 5px">
                 Delete
             </button>
-            <button onclick="openIncompleteTicket('${ticket.uId}')" style="border-color: var(--gen-orange); color: var(--gen-orange)">
+            <button onclick="popupTicket.open('${ticket.uId}')" style="border-color: var(--gen-orange); color: var(--gen-orange)">
                 Open
             </button>`;
         list.appendChild(li);
@@ -167,31 +201,11 @@ document.addEventListener("DOMContentLoaded", loadTickets);
 function openPersonProfile(uId) {
     openPopupWindow(`https://td.byui.edu/TDNext/Apps/People/PersonDet.aspx?U=${uId}`, 800, 760);
 }
-const WindowSearch = window.location.search.split('?')[1];
-function openNewTicket() {
-    openPopupWindow('../?' + WindowSearch, 325, 700);
-}
 function removeTicket(ticketId) {
     if (confirm("Are you sure you want to remove this ticket?")) {
         localStorage.removeItem('Becker_Ticker_' + ticketId);
         window.location.reload();
     }
-}
-function openIncompleteTicket(uId) {
-    let thisTicket = tickets.filter(x => x.uId == uId)[0];
-    console.log(thisTicket);
-    let search = WindowSearch;
-    if (thisTicket.includedVars.gcConversationId) { // add conversation id to the URL if it exists in the ticket
-        if (search.includes('gcConversationId=')) {
-            search = search.replace('gcConversationId=', 'gcConversationId=' + thisTicket.includedVars.gcConversationId);
-        } else {
-            search += '&gcConversationId=' + thisTicket.includedVars.gcConversationId;
-        }
-    }
-    let URL = '../?' + search;
-    localStorage.setItem('open_this_becker_ticket_now', thisTicket.ticketId);
-    console.log(URL);
-    openPopupWindow(URL, 325, 700);
 }
 
 function openPopupWindow(url, width = 800, height = 600) {
@@ -202,6 +216,38 @@ function openPopupWindow(url, width = 800, height = 600) {
     popupWindow.focus();
 
     setTimeout(loadTickets, 1000);
+}
+const WindowSearch = window.location.search.split('?')[1];
+class popupTicket {
+    static overlay = document.querySelector("overlay");
+    static frame = document.querySelector("iframe#ticketFrame");
+    static new() {
+        popupTicket.frame.src = '../?' + WindowSearch;
+        popupTicket.overlay.style.display = "block";
+    }
+    static close() {
+        popupTicket.frame.src = "";
+        popupTicket.overlay.style.display = "none";
+        loadTickets();
+    }
+    static open(uId) {
+        let thisTicket = tickets.filter(x => x.uId == uId)[0];
+        console.log(thisTicket);
+        let search = WindowSearch;
+        if (thisTicket.includedVars.gcConversationId) { // add conversation id to the URL if it exists in the ticket
+            if (search.includes('gcConversationId=')) {
+                search = search.replace('gcConversationId=', 'gcConversationId=' + thisTicket.includedVars.gcConversationId);
+            } else {
+                search += '&gcConversationId=' + thisTicket.includedVars.gcConversationId;
+            }
+        }
+        let URL = '../?' + search;
+        localStorage.setItem('open_this_becker_ticket_now', thisTicket.ticketId);
+        console.log(URL);
+        
+        popupTicket.frame.src = URL;
+        popupTicket.overlay.style.display = "block";
+    }
 }
     </script>
 </body>
