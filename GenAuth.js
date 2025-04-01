@@ -53,6 +53,7 @@ class GenAuth {
         this.usersApi = new platformClient.UsersApi();
         this.notificationsApi = new platformClient.NotificationsApi();
         this.conversationsApi = new platformClient.ConversationsApi();
+        this.extContactsApi = new platformClient.ExternalContactsApi();
         
         this.userMe = null;
         this.conversation = null;
@@ -216,5 +217,21 @@ class GenAuth {
                 console.log(err);
                 showToast(err.message);
             });
+    }
+
+    
+    // functions that other things can call, not just for internal use inside this library
+
+    async createNewContactFromNumber(firstName, lastName, number) {
+        return await this.extContactsApi.postExternalcontactsContacts({
+            'firstName': firstName,
+            'lastName': lastName,
+            'cellPhone': {
+                'display': toString(number)
+              },
+              "homePhone": {
+                'display': toString(number)
+              }
+        });
     }
 }

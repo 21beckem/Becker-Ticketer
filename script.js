@@ -247,3 +247,7 @@ if (BackMeUp.restoreLocalTicket()) {
     PersonSearchResults = BackMeUp.includedVars['PersonSearchResults'] || [];
     populateRequestorCards();
 }
+
+const platformClient = require('platformClient');
+platformClient.ApiClient.instance.setEnvironment(GenesysAuth.myClientApp.gcEnvironment);
+const extContactsApi = new platformClient.ExternalContactsApi();
