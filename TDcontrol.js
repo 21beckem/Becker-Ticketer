@@ -21,6 +21,19 @@ class TDcontroler {
         // console.log(desc);
         return [desc, title];
     }
+    async searchPersonAsType(query, searchType) {
+        let searchBtns = {
+            'I#' : 'Search (I Number and email)',
+            'PHONE' : 'Not a valid button yet!            <-- FIX THIS LATER! 😁',
+            'EMAIL' : 'Search (I Number and email)',
+            'NAME' : 'Search (Name)'
+        }
+        await this.sendMessageToIframe('setInput', 'Enter Requestor I-Number', query);
+        await this.sendMessageToIframe('click', searchBtns[searchType.toUpperCase()]);
+        await this.sendMessageToIframe('waitForLoad', '');
+        return await this.sendMessageToIframe('getTextarea', 'This will display the data response');
+    }
+
     async sendMessageToIframe(action, inputPlaceholder, valueToSet=null) {
         while (!this.iframeReady) {
             await new Promise(r => setTimeout(r, 100));
