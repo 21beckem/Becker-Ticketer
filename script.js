@@ -64,12 +64,12 @@ function detectSearchQueryType(inVal, outputSpan) {
         _('IdenifySearchButton').disabled = false;
         _('IdenifySearchQuery').setAttribute('Q-type', 'I#');
     }
-    // if inVal starts with + and has only numbers, parenthesis, hyphens, and spaces
-    else if (inVal.startsWith('+') && inVal.match(/^[+0-9()-\s]*$/)) {
-        outputSpan.innerText = 'Phone Number';
-        _('IdenifySearchButton').disabled = false;
-        _('IdenifySearchQuery').setAttribute('Q-type', 'PHONE');
-    }
+    // if inVal is a phone number
+    // else if (inVal.startsWith('+') && inVal.match(/^[+0-9()-\s]*$/)) {
+    //     outputSpan.innerText = 'Phone Number';
+    //     _('IdenifySearchButton').disabled = false;
+    //     _('IdenifySearchQuery').setAttribute('Q-type', 'PHONE');
+    // }
     // if inVal is an email
     else if (inVal.includes('@')) {
         outputSpan.innerText = 'Email';
@@ -105,7 +105,6 @@ async function conductIdenitySearch(el) {
     showLoader(true);
 
     let res = await TDcontrol.searchPersonAsType(q.trim(), t);
-    console.log(res);
     PersonSearchResults = ensurePersonResultsAreJson(res);
     
     showLoader(false);
@@ -116,14 +115,8 @@ async function conductIdenitySearch(el) {
     populateRequestorCards();
 }
 function ensurePersonResultsAreJson(res) {
-    try {
-        let json = JSON.parse(res);
-        if (json.length == 0) return [0];
-        if (json[0].name == null) return [0];
-        return json;
-    } catch (e) {
-        return [0];
-    }
+    if (res.length == 0) return [0];
+    return res;
 }
 function populateRequestorCards() {
     const peopleReultsList = _('peopleReultsList');
@@ -178,14 +171,15 @@ function selectPersonAndStartTicket(U_identifier) {
 
 async function generateTicketWithAI() {
     showLoader(true);
-    let [ticketDescription, title] = await TDcontrol.generateAIDescription(_('agentNotesTextarea').value);
-    _('DescriptionTextarea_ToSubmit').value = ticketDescription;
-    _('Title_toSubmit').value = title;
+    let result = await TDcontrol.generateAIDescription(_('agentNotesTextarea').value);
+    _('DescriptionTextarea_ToSubmit').value = result.desc;
+    _('Title_toSubmit').value = result.title;
     showLoader(false);
 
     _('ReviewAccordionBtn').setActive();
 }
 
+const ResponsibleGroups = [{"text":"Application Support (Tier 3)","value":0},{"text":"Classroom Technology (Tier 3)","value":1},{"text":"Database (Tier 3)","value":2},{"text":"End-User Support (Tier 3)","value":3},{"text":"GIS (Tier 3)","value":4},{"text":"Identity Management (Tier 3)","value":5},{"text":"I-Learn Admin (Tier 3)","value":6},{"text":"IT Cyber Security (Tier 3)","value":7},{"text":"IT Service Desk (Tier 1)","value":8},{"text":"IT Tier 2 Support","value":9},{"text":"IT Product Management","value":10},{"text":"License Servers (Tier 3)","value":11},{"text":"Lab/Imaging Support (Tier 3)","value":12},{"text":"Messaging / Email / Zoom / Google / G Suite (Tier 3)","value":13},{"text":"Network (Tier 3)","value":14},{"text":"Phone (Tier 3)","value":15},{"text":"Print / Fax (Tier 3)","value":16},{"text":"Sharepoint/OneDrive (Tier 3)","value":17},{"text":"Software Engineering (Tier 3)","value":18},{"text":"Student Information System – SIS (Tier 3)","value":19},{"text":"Workday (Tier 3)","value":20},{"text":"Webservices (Tier 3)","value":21},{"text":"VDI/ Antivirus (Tier 3)","value":22}]
 
 let timeout;
 document.getElementsByClassName("autoComplete").forEach(inputEl => {
@@ -206,7 +200,7 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
                 thisInputEl.nextElementSibling.innerHTML = '';
             });
         }
-        resultsUl.innerHTML = "";
+        resultsUl.innerHTML = '';
         inputEl.removeAttribute("data-value");
         clearTimeout(timeout);
         let query = this.value.trim();
@@ -214,31 +208,37 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
         if (query.length < 2) return;
 
         timeout = setTimeout(async () => {
-            await new Promise(r => setTimeout(r, 1));
-            const data = [{"caption":"Okta 400 Bad Request","subcaption":null,"value":"15584"},{"caption":"BYU Provo Duo and Okta Verify","subcaption":null,"value":"10766"},{"caption":"Error Message: 400 Bad Request","subcaption":null,"value":"15871"},{"caption":"New Pathway Portal Issues","subcaption":null,"value":"15867"},{"caption":"Sign In Process for New My.BYUI Online Students","subcaption":null,"value":"14571"},{"caption":"Okta 400 Bad Request","subcaption":null,"value":"15584"},{"caption":"BYU Provo Duo and Okta Verify","subcaption":null,"value":"10766"},{"caption":"Error Message: 400 Bad Request","subcaption":null,"value":"15871"},{"caption":"New Pathway Portal Issues","subcaption":null,"value":"15867"},{"caption":"Sign In Process for New My.BYUI Online Students","subcaption":null,"value":"14571"},{"caption":"Okta 400 Bad Request","subcaption":null,"value":"15584"},{"caption":"BYU Provo Duo and Okta Verify","subcaption":null,"value":"10766"},{"caption":"Error Message: 400 Bad Request","subcaption":null,"value":"15871"},{"caption":"New Pathway Portal Issues","subcaption":null,"value":"15867"},{"caption":"Sign In Process for New My.BYUI Online Students","subcaption":null,"value":"14571"}];
-
             // set Ul width
             resultsUl.style.width = (inputEl.offsetWidth - 2) + "px";
+            resultsUl.innerHTML = '<li>Loading...</li>';
 
+            let data = [];
+            if (inputEl.classList.contains("oneOfTheKBinputs")) {
+                data = await TDcontrol.searchKBs(query);  // seark KBs
+            } else {
+                data = ResponsibleGroups.filter(item => item.text.toLowerCase().includes(query.toLowerCase()));
+            }
+
+            resultsUl.innerHTML = '';
             data.forEach(item => {
                 let div = document.createElement("li");
-                div.textContent = item.caption;
+                div.textContent = item.text;
                 div.classList.add("result-item");
                 div.addEventListener("click", () => {
                     if (inputEl.classList.contains("oneOfTheKBinputs")) {
                         document.getElementsByClassName('oneOfTheKBinputs').forEach(thisInputEl => {
                             thisInputEl.setAttribute("data-value", item.value);
-                            thisInputEl.value = item.caption;
+                            thisInputEl.value = item.text;
                             thisInputEl.nextElementSibling.innerHTML = '';
                         });
                     }
                     inputEl.setAttribute("data-value", item.value);
-                    inputEl.value = item.caption;
+                    inputEl.value = item.text;
                     resultsUl.innerHTML = "";
                 });
                 resultsUl.appendChild(div);
             });
-        }, 200); // Wait 300ms before making API call
+        }, 500); // Wait 300ms before making API call
     });
 });
 document.addEventListener("click", (e) => {

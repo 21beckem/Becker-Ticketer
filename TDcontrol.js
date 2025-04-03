@@ -11,27 +11,47 @@ class TDcontroler {
         this.iframeReady = true;
         window.removeEventListener("message", this.readyMessageHandlerForEventListener);
     }
+    async searchKBs(query) {
+        let res = await this.sendMessageToIframe('getAroundTheForm', '4e9be2b5-069e-4d1e-95e2-66775e1e2c77', { "KB" : query });  // seark KBs
+        if (res.statusCode !== 200) console.error('Error retreiving response:', res);
+        return res.data.data;
+    }
     async generateAIDescription(agentNotes) {
-        await this.sendMessageToIframe('setTextarea', 'Enter detailed notes about the ticket. Include all relevant information, such as user-reported issues, troubleshooting steps taken, error messages, and any supplementary details that could assist in resolving the issue efficiently.  🚨 Important: DO NOT include personally identifiable information (PII) such as names, phone numbers, email addresses, dates of birth (DOB), Social Security numbers (SSNs), or any sensitive data (e.g., grades, honor code issues, etc.).', agentNotes);
-        await this.sendMessageToIframe('click', 'Complete with AI →');
-        await this.sendMessageToIframe('waitForLoad', '');
-        let desc = await this.sendMessageToIframe('getTextarea', 'The full details of a ticket that have been formatted and cleaned up from agent notes by our AI model.');
-        let title = await this.sendMessageToIframe('getInput', 'Enter ticket title');
-        // let classification = await this.sendMessageToIframe('getInput', 'There is no PLACEHOLDER TO SELECT CLASSIFICATION !!! ');
-        // console.log(desc);
-        return [desc, title];
+        let out = {};
+        out.title = this.sendMessageToIframe('getAroundTheForm', '803fbcee-7f8d-44e4-b6b2-84dce27f827c', { "Agent Notes" : agentNotes });  // generate title
+        out.desc = this.sendMessageToIframe('getAroundTheForm', '66bf43d5-1d71-4bbd-8f68-af1daeb035b7', { "Agent Notes" : agentNotes });  // generate desc
+
+        for (const key in out) {
+            out[key] = await out[key]; // wait for all promises
+            if (out[key].statusCode !== 200) console.error('Error retreiving response:', out[key]);
+        }
+
+        out.title = out.title.data.data;
+        out.desc = out.desc.data.data;
+        return out;
     }
     async searchPersonAsType(query, searchType) {
-        let searchBtns = {
-            'I#' : 'Search (I Number and email)',
-            'PHONE' : 'Not a valid button yet!            <-- FIX THIS LATER! 😁',
-            'EMAIL' : 'Search (I Number and email)',
-            'NAME' : 'Search (Name)'
+        let flowIds = {
+            'I#' : '5fdd0866-6309-4e35-b405-32a03f36d1fb',
+            'EMAIL' : '5fdd0866-6309-4e35-b405-32a03f36d1fb',
+            'NAME' : '3f23149d-2199-4c3a-b940-7a2ea50952c8'
         }
-        await this.sendMessageToIframe('setInput', 'Enter Requestor I-Number', query);
-        await this.sendMessageToIframe('click', searchBtns[searchType.toUpperCase()]);
-        await this.sendMessageToIframe('waitForLoad', '');
-        return await this.sendMessageToIframe('getTextarea', 'This will display the data response');
+        let res = await this.sendMessageToIframe('getAroundTheForm', flowIds[searchType.toUpperCase()], { "searchInput" : query });
+        console.log(res);
+        if (searchType.toUpperCase() == 'NAME') {
+            res = JSON.parse(res.data.data);
+        } else {
+            res = {
+                "name": res.data.data['requestorName'],
+                "inumber": '',
+                "uid": res.data.data['tdxUID'],
+                "email": res.data.data['requestorEmail'],
+                "type": res.data.data['requestorDepartment'],
+                "company": (res.data.data['requestorEmail'].toLowerCase().includes('@byui.edu')) ? 'BYUI' : 'OTHER',
+                "username": ''
+            }
+        }
+        return res;
     }
 
     async sendMessageToIframe(action, inputPlaceholder, valueToSet=null) {
@@ -49,7 +69,6 @@ class TDcontroler {
             }
     
             window.addEventListener("message", handleMessage);
-            if (valueToSet != null) valueToSet = String(valueToSet);
             this.iframe.contentWindow.postMessage({ action, inputPlaceholder, requestId, valueToSet }, "*");
         });
     }
