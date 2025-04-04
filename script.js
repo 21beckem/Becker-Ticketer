@@ -2,6 +2,8 @@ HTMLCollection.prototype.forEach = Array.from(this).forEach;
 let AccordianSections = document.getElementsByClassName("accordion");
 const _ = (el) => document.getElementById(el);
 const TDcontrol = new TDcontroler(_("TDFormFrame"));
+// turn off autocomplete for ALL inputs
+document.querySelectorAll('input').forEach(el => el.autocomplete = 'off');
 AccordianSections.forEach((el) => {
     if (el.classList.contains("active")) {
         el.nextElementSibling.style.height = (document.body.scrollHeight - 165) + "px";
@@ -172,14 +174,22 @@ function selectPersonAndStartTicket(U_identifier) {
 async function generateTicketWithAI() {
     showLoader(true);
     let result = await TDcontrol.generateAIDescription(_('agentNotesTextarea').value);
-    _('DescriptionTextarea_ToSubmit').value = result.desc;
-    _('Title_toSubmit').value = result.title;
+
+    _('DescriptionTextarea_ToSubmit').value = result.desc; // set the description
+    _('Title_toSubmit').value = result.title; // set the title
+    if (result.isIncident) { // select the correct radio buttons for incident or service request
+        _('Type_toSubmit_Incident').checked = true;
+        _('Status_toSubmit_New').checked = true;
+    } else {
+        _('Type_toSubmit_Service_Request').checked = true;
+        _('Status_toSubmit_Resolved').checked = true;
+    }
+    _('Responsible_toSubmit').setSelected(result.responsible);
     showLoader(false);
 
     _('ReviewAccordionBtn').setActive();
 }
 
-const ResponsibleGroups = [{"text":"Application Support (Tier 3)","value":0},{"text":"Classroom Technology (Tier 3)","value":1},{"text":"Database (Tier 3)","value":2},{"text":"End-User Support (Tier 3)","value":3},{"text":"GIS (Tier 3)","value":4},{"text":"Identity Management (Tier 3)","value":5},{"text":"I-Learn Admin (Tier 3)","value":6},{"text":"IT Cyber Security (Tier 3)","value":7},{"text":"IT Service Desk (Tier 1)","value":8},{"text":"IT Tier 2 Support","value":9},{"text":"IT Product Management","value":10},{"text":"License Servers (Tier 3)","value":11},{"text":"Lab/Imaging Support (Tier 3)","value":12},{"text":"Messaging / Email / Zoom / Google / G Suite (Tier 3)","value":13},{"text":"Network (Tier 3)","value":14},{"text":"Phone (Tier 3)","value":15},{"text":"Print / Fax (Tier 3)","value":16},{"text":"Sharepoint/OneDrive (Tier 3)","value":17},{"text":"Software Engineering (Tier 3)","value":18},{"text":"Student Information System – SIS (Tier 3)","value":19},{"text":"Workday (Tier 3)","value":20},{"text":"Webservices (Tier 3)","value":21},{"text":"VDI/ Antivirus (Tier 3)","value":22}]
 
 let timeout;
 document.getElementsByClassName("autoComplete").forEach(inputEl => {
@@ -190,6 +200,14 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
 
     let resultsUl = document.createElement("ul");
     autoComplete_wrapper.appendChild(resultsUl);
+
+    inputEl.setSelected = (item) => {
+        if (item) {
+            inputEl.setAttribute("data-value", item.value);
+            inputEl.value = item.text;
+            resultsUl.innerHTML = "";
+        }
+    }
 
 
     inputEl.addEventListener("input", function () {
