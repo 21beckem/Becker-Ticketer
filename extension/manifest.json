@@ -20,7 +20,7 @@
 			"matches": [ "http://*/*", "https://*/*" ],
 			"js": [ "inject_to_the_right_pages.js" ],
 			"all_frames": true,
-			"run_at": "document_end"
+			"run_at": "document_start"
 		}
 	]
 }

@@ -151,12 +151,16 @@ overlay .ticket-window {
         </div>
     </overlay>
 
+    <script src="../waitUntilExtensionInstalled.js"></script>
+
     <script>
 // Load tickets from local storage
 let tickets = [];
 
 function loadTickets() {
     // read tickets from local storage
+    console.log("Loading tickets from local storage...");
+    console.log( Object.keys(localStorage).filter(x => x.startsWith('Becker_Ticker_')) );
     tickets = Object.keys(localStorage).filter(x => x.startsWith('Becker_Ticker_')).map(x => {
         let t = JSON.parse(localStorage.getItem(x));
         if (t.includedVars.length == 0) { // no included vars which means no person was selected. Ticket is useless

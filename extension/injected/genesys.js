@@ -5,7 +5,7 @@ window.onbeforeunload = function(event) {
     return "Are you sure you want to refresh the page?";
 };
 function openBeckerTicketManagerWindow(open = true) {
-    let hiddenTicketerBtn = document.querySelector('*[title="Becker Ticket Manager - DO_NOT_CHANGE_NAME"]').querySelector('a');
+    let hiddenTicketerBtn = document.querySelector('*[title="Becker Ticketer Installer"]').querySelector('a');
     if (open) {
         hiddenTicketerBtn.click();
         setTimeout(()=>{ hiddenTicketerBtn.click() }, 500);
@@ -44,7 +44,7 @@ sidebar.insertBefore(newLiBtn, sidebar.querySelector('LI.spacer'));
 
 // add CSS rule to hide the original app button
 var styleSheet = document.createElement("style");
-styleSheet.textContent = `*[title="Becker Ticket Manager - DO_NOT_CHANGE_NAME"] { display: none !important; }`
+styleSheet.textContent = `*[title="Becker Ticketer Installer"] { display: none !important; }`;
 document.head.appendChild(styleSheet);
 
 })();
