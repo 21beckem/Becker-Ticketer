@@ -1,4 +1,12 @@
-function confirmBeckerTicketerIsInstalled() {
+function confirmBeckerTicketerIsInstalled(setSessionStorage = true) {
+    if (setSessionStorage) {
+        // add to sessionstorage
+        let date = new Date();
+        let timestamp = date.getTime();
+        sessionStorage.setItem("BECKERTICKETEREXTENSIONISINSTALLED", timestamp);
+    }
+
+    // remove overlay
     const overlay = document.getElementById("ConnectingToExtensionOverlay");
     if (overlay) {
         overlay.remove();
@@ -66,6 +74,20 @@ overlay.innerHTML = `
 // add to page
 document.body.appendChild(overlay);
 
+// if sessionstorage has a value, remove overlay
+let timestamp = sessionStorage.getItem("BECKERTICKETEREXTENSIONISINSTALLED");
+let alreadyInstalled = false;
+if (timestamp !== null) {
+    let date = new Date(parseInt(timestamp));
+    let now = new Date();
+    let diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+    if (diffInHours < 3) {
+        alreadyInstalled = true;
+        confirmBeckerTicketerIsInstalled(setSessionStorage=false);
+    } else {
+        sessionStorage.removeItem("BECKERTICKETEREXTENSIONISINSTALLED");
+    }
+}
 
 // if extension already injected, remove overlay
 try {
