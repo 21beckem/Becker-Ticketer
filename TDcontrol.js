@@ -34,9 +34,19 @@ class TDcontroler {
         out.isIncident = parseInt(out.isIncident.data.data) == 32 ? true : false;
         return out;
     }
-    async submitTicket() {
-        if (!confirm('Are you sure you want to submit?')) return;
-
+    async submitTicket(title, classification, responsible, status, uid, kb, description, email) {
+        console.log({
+            "Title": title,
+            "Classification": classification,
+            "Responsible": responsible,
+            "Status": status,
+            "UID": uid,
+            "KBS": kb,
+            "Description": description,
+            "Email": email
+        });
+        
+        return;
         let res = await this.sendMessageToIframe('getAroundTheForm', 'a5ad1f60-b8e9-4d02-92bb-644f9149965b', {
             "Title": "Test Call for System Evaluation",
             "Classification": "46",
@@ -46,37 +56,28 @@ class TDcontroler {
             "Status": "52",
             "Status_Text": "Resolved",
             "UID": "9e94d934-cbe6-ea11-9111-005056ac5ec6",
-            "KB": "DUO",
             "KBS": "14008",
             "KBS_Text": "Adding a Passkey to Duo",
             "Agent Notes": "Vinni called and this is a test so we can test out what is going on ",
             "Ticketsure?": true,
             "Manual Description": "A user named Vinni initiated a call for testing purposes. No specific technical issue or request was reported during the interaction. This appears to be a routine test call to evaluate system functionality or communication processes. No further action is required unless additional context or issues are provided in future interactions.",
             "Identity-UserId": "u650323084@byui.edu",
-            "_Result": "AI Auto-Complete"
+            "_Result": "Becker Ticketer"
         });
         return res;
     }
     async searchPersonAsType(query, searchType) {
         let flowIds = {
-            'I#' : '5fdd0866-6309-4e35-b405-32a03f36d1fb',
+            'I#' : '8c529ff1-d6d1-48d8-b1e8-d0a3e8795b86',
             'EMAIL' : '5fdd0866-6309-4e35-b405-32a03f36d1fb',
             'NAME' : '3f23149d-2199-4c3a-b940-7a2ea50952c8'
         }
         let res = await this.sendMessageToIframe('getAroundTheForm', flowIds[searchType.toUpperCase()], { "searchInput" : query });
         console.log(res);
-        if (searchType.toUpperCase() == 'NAME') {
+        try {
             res = JSON.parse(res.data.data);
-        } else {
-            res = {
-                "name": res.data.data['requestorName'],
-                "inumber": '',
-                "uid": res.data.data['tdxUID'],
-                "email": res.data.data['requestorEmail'],
-                "type": res.data.data['requestorDepartment'],
-                "company": (res.data.data['requestorEmail'].toLowerCase().includes('@byui.edu')) ? 'BYUI' : 'OTHER',
-                "username": ''
-            }
+        } catch (e) {
+            res = [];
         }
         return res;
     }

@@ -73,11 +73,11 @@ function detectSearchQueryType(inVal, outputSpan) {
     //     _('IdenifySearchQuery').setAttribute('Q-type', 'PHONE');
     // }
     // if inVal is an email
-    else if (inVal.includes('@')) {
-        outputSpan.innerText = 'Email';
-        _('IdenifySearchButton').disabled = false;
-        _('IdenifySearchQuery').setAttribute('Q-type', 'EMAIL');
-    }
+    // else if (inVal.includes('@')) {
+    //     outputSpan.innerText = 'Email';
+    //     _('IdenifySearchButton').disabled = false;
+    //     _('IdenifySearchQuery').setAttribute('Q-type', 'EMAIL');
+    // }
     // if inval is a name
     else {
         outputSpan.innerText = 'Name';
@@ -135,16 +135,16 @@ function populateRequestorCards() {
             peopleReultsList.appendChild(personCard);
             return;
         }
-        if (result.uid == SelectedPersonId) {
+        if (result.UID == SelectedPersonId) {
             personCard.classList.add('selected');
-            document.querySelector('#IdentifyAccordionBtn span').innerHTML = ': ' + result.name;
+            document.querySelector('#IdentifyAccordionBtn span').innerHTML = ': ' + result.FullName;
         }
-        personCard.setAttribute('id', result.uid);
+        personCard.setAttribute('id', result.UID);
         personCard.innerHTML = `
-            <h3 onclick="openPersonDetails('`+result.uid+`')">`+result.name+`</h3>
-            <p>`+result.email+`</p>
-            <p>`+result.company+`</p>
-            <button onclick="selectPersonAndStartTicket('`+result.uid+`')"><div style="width: 30px; height: 100%; display: flex; align-items: center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="var(--gen-orange)"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 64C28.7 64 0 92.7 0 128l0 64c0 8.8 7.4 15.7 15.7 18.6C34.5 217.1 48 235 48 256s-13.5 38.9-32.3 45.4C7.4 304.3 0 311.2 0 320l0 64c0 35.3 28.7 64 64 64l448 0c35.3 0 64-28.7 64-64l0-64c0-8.8-7.4-15.7-15.7-18.6C541.5 294.9 528 277 528 256s13.5-38.9 32.3-45.4c8.3-2.9 15.7-9.8 15.7-18.6l0-64c0-35.3-28.7-64-64-64L64 64zm64 112l0 160c0 8.8 7.2 16 16 16l288 0c8.8 0 16-7.2 16-16l0-160c0-8.8-7.2-16-16-16l-288 0c-8.8 0-16 7.2-16 16zM96 160c0-17.7 14.3-32 32-32l320 0c17.7 0 32 14.3 32 32l0 192c0 17.7-14.3 32-32 32l-320 0c-17.7 0-32-14.3-32-32l0-192z"/></svg></div></button>
+            <h3 onclick="openPersonDetails('`+result.UID+`')">`+result.FullName+`</h3>
+            <p>`+result.PrimaryEmail+`</p>
+            <p>`+(result.DefaultAccountName||result.Department)+`</p>
+            <button onclick="selectPersonAndStartTicket('`+result.UID+`')"><div style="width: 30px; height: 100%; display: flex; align-items: center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="var(--gen-orange)"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 64C28.7 64 0 92.7 0 128l0 64c0 8.8 7.4 15.7 15.7 18.6C34.5 217.1 48 235 48 256s-13.5 38.9-32.3 45.4C7.4 304.3 0 311.2 0 320l0 64c0 35.3 28.7 64 64 64l448 0c35.3 0 64-28.7 64-64l0-64c0-8.8-7.4-15.7-15.7-18.6C541.5 294.9 528 277 528 256s13.5-38.9 32.3-45.4c8.3-2.9 15.7-9.8 15.7-18.6l0-64c0-35.3-28.7-64-64-64L64 64zm64 112l0 160c0 8.8 7.2 16 16 16l288 0c8.8 0 16-7.2 16-16l0-160c0-8.8-7.2-16-16-16l-288 0c-8.8 0-16 7.2-16 16zM96 160c0-17.7 14.3-32 32-32l320 0c17.7 0 32 14.3 32 32l0 192c0 17.7-14.3 32-32 32l-320 0c-17.7 0-32-14.3-32-32l0-192z"/></svg></div></button>
         `;
         peopleReultsList.appendChild(personCard);
     });
@@ -164,9 +164,9 @@ function selectPersonAndStartTicket(U_identifier) {
     _('peopleReultsList').children.forEach(personCard => personCard.classList.remove('selected'));
     document.querySelector('#peopleReultsList div.personCard[id="'+SelectedPersonId+'"]').classList.add('selected');
     
-    let person = PersonSearchResults.filter((per) => per.uid === SelectedPersonId)[0];
-    _('RequesterName_toSubmit').value = person.name;
-    document.querySelector('#IdentifyAccordionBtn span').innerHTML = ': ' + person.name;
+    let person = PersonSearchResults.filter((per) => per.UID === SelectedPersonId)[0];
+    _('RequesterName_toSubmit').value = person.FullName;
+    document.querySelector('#IdentifyAccordionBtn span').innerHTML = ': ' + person.FullName;
     _('AssistAccordionBtn').setActive();
 }
 
@@ -188,6 +188,39 @@ async function generateTicketWithAI() {
     showLoader(false);
 
     _('ReviewAccordionBtn').setActive();
+}
+
+async function submitTicketToTD() {
+    // verify that fields are filled out
+    let gg = true;
+    fieldsToCheck = ['Responsible_toSubmit', 'Title_toSubmit', 'KB_toSubmit', 'DescriptionTextarea_ToSubmit'];
+    fieldsToCheck.forEach((field) => {
+        let thisEl = _(field);
+        thisEl.addEventListener('input', () => {
+            thisEl.classList.remove('error');
+        });
+        if (thisEl.value.trim() == '') {
+            gg = false;
+            thisEl.classList.add('error');
+
+        } else {
+            thisEl.classList.remove('error');
+        }
+    });
+    if (!gg) { return; }
+
+
+    if (!confirm("Are you sure you want to submit this ticket?")) { return; }
+    showLoader(true);
+
+    // let res = await TDcontrol.submitTicket(
+    //     _('Title_toSubmit').value,
+    //     _('DescriptionTextarea_ToSubmit').value,
+    //     _('Type_toSubmit').value,
+    //     _('Status_toSubmit').value,
+    //     _('Responsible_toSubmit').getAttribute('data-value')
+    // );
+
 }
 
 

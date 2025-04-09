@@ -16,6 +16,7 @@ html *, body * {
     --gen-light-gray: #98A7B8;
     --gen-blue: #2A60C8;
     --gen-green: #77DD22;
+    --gen-red: #FF0000;
 }
 /* HTML: <div class="loader"></div> */
 .loader {
@@ -186,6 +187,17 @@ label.either_or.two { border-radius: 0 5px 5px 0 }
 input[type="radio"]:checked+label.either_or {
     background-color: var(--gen-orange);
     color: white;
+}
+.error {
+    animation: fadeInOutError 2s infinite;
+}
+@keyframes fadeInOutError {
+    0%, 100% {
+        box-shadow: 0px 0px 5px 0px var(--gen-red);
+    }
+    50% {
+        box-shadow: none;
+    }
 }
 
 #TDFormFrame {
