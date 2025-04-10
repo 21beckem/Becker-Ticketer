@@ -1,14 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Install Backer Ticketer</title>
+    <title>Install Becker-Ticketer Extension</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 2em auto;
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 4px;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        .section {
+            margin-bottom: 2em;
+        }
+    </style>
 </head>
+
 <body>
-    <center>
-        <br><br>
-        <h1>How to install the Becker Ticketer Extension...</h1>
-    </center>
+    <h1>Install Becker-Ticketer Extension</h1>
+
+    <!-- Chrome instructions -->
+    <div id="chrome-instructions" class="section">
+        <h2>Instructions for Google Chrome</h2>
+        <ol>
+            <li>Click here to download the extension: <a href="BeckerTicketerDownloader.bat">BeckerTicketerDownloader</a></li>
+            <li>Copy and paste <code>chrome://extensions</code> in the address bar and press Enter.</li>
+            <li>Enable <strong>Developer mode</strong> (toggle it on in the top-right corner).</li>
+            <li>In the file explorer window that opened up after the extension was donloaded, click and drag the <strong>BeckerTicketerExtension</strong> folder to the exensions page.</li>
+            <li>Reload Genesys</li>
+        </ol>
+    </div>
+
+    <!-- Edge instructions -->
+    <div id="edge-instructions" class="section">
+        <h2>Instructions for Microsoft Edge</h2>
+        <ol>
+            <li>Click here to download the extension: <a href="BeckerTicketerDownloader.bat">BeckerTicketerDownloader</a></li>
+            <li>Copy and paste <code>edge://extensions</code> in the address bar and press Enter.</li>
+            <li>Enable <strong>Developer mode</strong> (toggle it on in the lower-left corner).</li>
+            <li>Click on <strong>Load unpacked</strong> and select your extension's folder.</li>
+            <li>In the file explorer window that opened up after the extension was donloaded, click and drag the <strong>BeckerTicketerExtension</strong> folder to the exensions page.</li>
+            <li>Reload Genesys</li>
+        </ol>
+    </div>
+
+    <script>
+        // On page load, detect browser and show/hide instructions
+        window.onload = function () {
+            var userAgent = navigator.userAgent;
+            var chromeDiv = document.getElementById('chrome-instructions');
+            var edgeDiv = document.getElementById('edge-instructions');
+
+            // Check for Edge (Chromium-based uses "Edg" in the UA string)
+            if (userAgent.indexOf("Edg") > -1) {
+                chromeDiv.style.display = "none";
+                edgeDiv.style.display = "block";
+            }
+            // If not Edge, check for Chrome (make sure not to misidentify other browsers)
+            else if (userAgent.indexOf("Chrome") > -1) {
+                edgeDiv.style.display = "none";
+                chromeDiv.style.display = "block";
+            } else {
+                // If browser is neither recognized, show both instructions 
+                // or customize as you see fit.
+                chromeDiv.style.display = "block";
+                edgeDiv.style.display = "block";
+            }
+        };
+    </script>
 </body>
+
 </html>
