@@ -83,6 +83,8 @@ class TDcontroler {
                 <a href="javascript:reloadFromBeginning()">Submit Another Ticket</a>
                 <br><br>
             `, 'Ticket submitted successfully', JSAlert.Icons.Success);
+            BackMeUp.disableBackup();
+            BackMeUp.removeBackup();
             return res;
         }
     }

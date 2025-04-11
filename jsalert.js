@@ -286,9 +286,9 @@
                     M.elem = document.createElement("input"), M.elem.style.cssText = "display: block; width: 90%; min-width: 250px; padding: 5px 0px; margin: 10px auto; background-color: #FFF; border: 1px solid #EEE; border-radius: 5px; text-align: center; font-family: Helvetica, Arial; font-size: 15px; color: #222; ", M.elem.value = M.value, M.elem.placeholder = M.placeholder, M.elem.type = M.type, this.elems.textFields.appendChild(M.elem), M.elem.addEventListener("keypress", (M => {
                         13 == M.keyCode && (N + 1 >= this.textFields.length ? this.dismiss("enter-pressed") : this.textFields[N + 1].elem.focus())
                     }))
-                })), this.textFields[0].elem.focus()), this.buttons.length > 0 && (this.elems.buttons = document.createElement("div"), this.elems.buttons.style.cssText = "display: block; display: flex; justify-content: space-around; align-items: center; text-align: right; border-top: 1px solid #EEE; margin-top: 10px; ", this.elems.window.appendChild(this.elems.buttons), this.buttons.forEach((M => {
+                })), this.textFields[0].elem.focus()), this.buttons.length > 0 && (this.elems.buttons = document.createElement("div"), this.elems.buttons.style.cssText = "flex-direction: column; display: block; display: flex; justify-content: space-around; align-items: center; text-align: right; border-top: 1px solid #EEE; margin-top: 10px; ", this.elems.window.appendChild(this.elems.buttons), this.buttons.forEach((M => {
                     var N = document.createElement("div");
-                    N.style.cssText = "display: inline-block; font-family: Helvetica, Arial; font-size: 15px; font-weight: bold; color: var(--light-blue); padding: 10px 20px; padding-bottom: 0px; cursor: pointer; ", N.innerText = M.text, this.elems.buttons.appendChild(N), this.addTouchHandler(N, (() => {
+                    N.style.cssText = "display: inline-block; font-family: Helvetica, Arial; font-size: 15px; font-weight: bold; color: var(--light-blue); padding: 15px; cursor: pointer; ", N.innerText = M.text, this.elems.buttons.appendChild(N), this.addTouchHandler(N, (() => {
                         M.callback && M.callback(M.value), "cancel" == M.type && (this.cancelled = !0), this.dismiss(M.value)
                     }))
                 })))

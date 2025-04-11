@@ -47,7 +47,14 @@ class BackMeUp {
         }
         return false;
     }
+    static disableBackup() {
+        BackMeUp.stopSaving = true;
+    }
+    static removeBackup() {
+        localStorage.removeItem('Becker_Ticker_'+BackMeUp.ticketId);
+    }
     static saveTicketLocally() {
+        if (BackMeUp.stopSaving) { return; }
         let newJson = {
             includedVars : BackMeUp.includedVars,
             timestamp: new Date().getTime(),
@@ -81,6 +88,7 @@ class BackMeUp {
         BackMeUp.saveTicketLocally();
     }
     static ticketId = null;
+    static stopSaving = false;
 }
 
 
