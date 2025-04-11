@@ -150,12 +150,15 @@ function populateRequestorCards() {
     });
 }
 let currentPopupWindow = null;
-async function openPersonDetails(U_identifier) {
+function openPersonDetails(U_identifier) {
     const popupWidth = 800;
     const popupHeight = 760;
     const left = (screen.width - popupWidth) / 2;
     const top = (screen.height - popupHeight) / 2;
     currentPopupWindow = window.open('https://td.byui.edu/TDNext/Apps/People/PersonDet.aspx?U=' + U_identifier, 'PersonDetails', 'width='+popupWidth+',height='+popupHeight+',top='+top+',left='+left);
+}
+function openInNewTab(url) {
+    window.open(url, '_blank');
 }
 
 function selectPersonAndStartTicket(U_identifier) {
@@ -199,28 +202,40 @@ async function submitTicketToTD() {
         thisEl.addEventListener('input', () => {
             thisEl.classList.remove('error');
         });
-        if (thisEl.value.trim() == '') {
-            gg = false;
-            thisEl.classList.add('error');
-
-        } else {
-            thisEl.classList.remove('error');
+        if (thisEl.classList.contains('autoComplete')) { // dropdown input
+            if (thisEl.getAttribute('data-value')) {
+                thisEl.classList.remove('error');
+            } else {
+                gg = false;
+                thisEl.classList.add('error');
+            }
+        } else { // text input
+            if (thisEl.value.trim() == '') {
+                gg = false;
+                thisEl.classList.add('error');
+    
+            } else {
+                thisEl.classList.remove('error');
+            }
         }
     });
     if (!gg) { return; }
 
 
-    if (!confirm("Are you sure you want to submit this ticket?")) { return; }
+    if ( !await JSAlert.confirm('<br>Are you sure you want to submit this ticket?<br><br>', 'Submit Ticket?', JSAlert.Icons.Success, 'Yes, Submit Ticket', 'No, Cancel') ) { return; }
     showLoader(true);
 
-    // let res = await TDcontrol.submitTicket(
-    //     _('Title_toSubmit').value,
-    //     _('DescriptionTextarea_ToSubmit').value,
-    //     _('Type_toSubmit').value,
-    //     _('Status_toSubmit').value,
-    //     _('Responsible_toSubmit').getAttribute('data-value')
-    // );
+    const title = _('Title_toSubmit').value;
+    const classification = _('Type_toSubmit_Incident').checked ? _('Type_toSubmit_Incident').getAttribute('data-value') : _('Type_toSubmit_Service_Request').getAttribute('data-value');
+    const responsible = _('Responsible_toSubmit').getAttribute('data-value');
+    const status = _('Status_toSubmit_New').checked ? _('Status_toSubmit_New').getAttribute('data-value') : _('Status_toSubmit_Resolved').getAttribute('data-value');
+    const uid = SelectedPersonId;
+    const kb = [ _('KB_toSubmit').value, _('KB_toSubmit').getAttribute('data-value') ];
+    const description = _('DescriptionTextarea_ToSubmit').value;
 
+    let res = await TDcontrol.submitTicket( title, classification, responsible, status, uid, kb, description );
+
+    showLoader(false);
 }
 
 

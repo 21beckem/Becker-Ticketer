@@ -8,7 +8,13 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.6.7/purecloud-client-app-sdk.js"></script>
     <script src="https://sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
-    <script src="GenAuth.js"></script><script> const GenesysAuth = new GenAuth(); </script>
+    <script src="GenAuth.js"></script>
+    <script>
+        const FirstFullURL = window.location.href; // get URL before Genesys changes everything
+        function reloadFromBeginning() { window.location.href = FirstFullURL; window.location.reload(); }
+        const GenesysAuth = new GenAuth();
+    </script>
+    <script src="jsalert.js"></script>
 </head>
 
 <body>
@@ -46,9 +52,9 @@
 
         <label for="Type_toSubmit">Type</label>
         <div class="either_or">
-            <input type="radio" name="Type_toSubmit" id="Type_toSubmit_Incident" />
+            <input type="radio" name="Type_toSubmit" id="Type_toSubmit_Incident" data-value="32" />
             <label class="either_or one" for="Type_toSubmit_Incident">Incident</label>
-            <input type="radio" name="Type_toSubmit" id="Type_toSubmit_Service_Request" checked="checked" />
+            <input type="radio" name="Type_toSubmit" id="Type_toSubmit_Service_Request" data-value="46" checked="checked" />
             <label class="either_or two" for="Type_toSubmit_Service_Request">Service Request</label>
         </div>
 
@@ -57,9 +63,9 @@
 
         <label for="Status_toSubmit">Status</label>
         <div class="either_or">
-            <input type="radio" name="Status_toSubmit" id="Status_toSubmit_New" />
+            <input type="radio" name="Status_toSubmit" id="Status_toSubmit_New" data-value="52" />
             <label class="either_or one" for="Status_toSubmit_New">New</label>
-            <input type="radio" name="Status_toSubmit" id="Status_toSubmit_Resolved" checked="checked" />
+            <input type="radio" name="Status_toSubmit" id="Status_toSubmit_Resolved" data-value="55" checked="checked" />
             <label class="either_or two" for="Status_toSubmit_Resolved">Resolved</label>
         </div>
 

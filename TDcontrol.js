@@ -34,37 +34,66 @@ class TDcontroler {
         out.isIncident = parseInt(out.isIncident.data.data) == 32 ? true : false;
         return out;
     }
-    async submitTicket(title, classification, responsible, status, uid, kb, description, email) {
-        console.log({
+    async submitTicket(title, classification, responsible, status, uid, kb, description) {
+        // ensure all values are strings
+        title = String(title).trim();
+        classification = String(classification).trim();
+        let classification_text = {"46": "Service Request", "32": "Incident"}[classification]
+        responsible = String(responsible).trim();
+        let responsible_text = ResponsibleGroups.filter(item => item.value == responsible)[0].text;
+        status = String(status).trim();
+        let status_text = {"55": "Resolved", "52": "New"}[status];
+        uid = String(uid).trim();
+        kb[1] = String(kb[1]).trim();
+        description = String(description).trim();
+        let identity = "login@byui.edu";
+        try {
+            identity = GenesysAuth.userMe.username;
+        } catch (error) {}
+        const toSubmit = {
             "Title": title,
             "Classification": classification,
-            "Responsible": responsible,
+            "Classification_Text": classification_text,
+            "Responsibility": responsible,
+            "Responsibility_Text": responsible_text,
             "Status": status,
+            "Status_Text": status_text,
             "UID": uid,
-            "KBS": kb,
-            "Description": description,
-            "Email": email
-        });
-        
-        return;
-        let res = await this.sendMessageToIframe('getAroundTheForm', 'a5ad1f60-b8e9-4d02-92bb-644f9149965b', {
-            "Title": "Test Call for System Evaluation",
-            "Classification": "46",
-            "Classification_Text": "Service Request",
-            "Responsibility": "386",
-            "Responsibility_Text": "IT Service Desk (Tier 1)",
-            "Status": "52",
-            "Status_Text": "Resolved",
-            "UID": "9e94d934-cbe6-ea11-9111-005056ac5ec6",
-            "KBS": "14008",
-            "KBS_Text": "Adding a Passkey to Duo",
-            "Agent Notes": "Vinni called and this is a test so we can test out what is going on ",
+            "KBS": kb[1],
+            "KBS_Text": kb[0],
+            "Agent Notes": "",
             "Ticketsure?": true,
-            "Manual Description": "A user named Vinni initiated a call for testing purposes. No specific technical issue or request was reported during the interaction. This appears to be a routine test call to evaluate system functionality or communication processes. No further action is required unless additional context or issues are provided in future interactions.",
-            "Identity-UserId": "u650323084@byui.edu",
+            "Manual Description": description,
+            "Identity-UserId": identity,
             "_Result": "Becker Ticketer"
-        });
-        return res;
+        };
+        console.log(toSubmit);
+        let res = await this.sendMessageToIframe('getAroundTheForm', 'a5ad1f60-b8e9-4d02-92bb-644f9149965b', toSubmit);
+        console.log(res);
+        
+        res = this.checkIfSubmissionResultIsError(res);
+        if (!res) {
+            JSAlert.alert('', 'Error submitting ticket', JSAlert.Icons.Failed);
+            return false;
+        } else {
+            JSAlert.alert(`
+                <br>
+                <a href="https://td.byui.edu/TDNext/Apps/33/Tickets/TicketDet?TicketID=${res}" target="_blank">View Completed Ticket</a>
+                <br><br>
+                <a href="javascript:reloadFromBeginning()">Submit Another Ticket</a>
+                <br><br>
+            `, 'Ticket submitted successfully', JSAlert.Icons.Success);
+            return res;
+        }
+    }
+    checkIfSubmissionResultIsError(res) {
+        if (res.statusCode !== 200) { return false }
+        if (!res.hasOwnProperty('data')) { return false }
+        if (!res.data.hasOwnProperty('data')) { return false }
+        if (!res.data.hasOwnProperty('status')) { return false }
+        if (res.data.status.toLowerCase() != 'completed' && res.data.data.status.toLowerCase() != 'success') { return false }
+
+        return res.data.data.split('#')[1];
     }
     async searchPersonAsType(query, searchType) {
         let flowIds = {

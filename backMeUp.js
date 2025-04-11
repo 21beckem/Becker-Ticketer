@@ -20,6 +20,9 @@ class BackMeUp {
                 }
             }
         }
+        if (!genConnected) {
+            JSAlert.alert('Oh no! looks like Becker-Ticketer failed to connect to Genesys! Certain features may not work.', 'Genesys Not Connected', JSAlert.Icons.Warning);
+        }
         console.log("BackMeUp Ticket ID: " + BackMeUp.ticketId);
 
         BackMeUp.setupInputListeners();
