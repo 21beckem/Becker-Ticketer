@@ -36,9 +36,10 @@ class BackMeUp {
                 if (el.classList.contains('autoComplete')) {
                     el.value = thisTicket.textInputs[idx][0];
                     el.setAttribute('data-value', thisTicket.textInputs[idx][1]);
+                } else {
+                    el.value = thisTicket.textInputs[idx];
+                    el.dispatchEvent(new Event('input'));
                 }
-                el.value = thisTicket.textInputs[idx];
-                el.dispatchEvent(new Event('input'));
             });
             Array.from(document.querySelectorAll('input[type=radio]')).forEach((el, idx) => {
                 el.checked = thisTicket.radioInputs[idx];
