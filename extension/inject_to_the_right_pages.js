@@ -19,12 +19,12 @@ function urlMatches(urlArr) {
 }
 window.addEventListener('load', () => {
     if (urlMatches("apps.usw2.pure.cloud/directory")) {
-        loadJsFile( chrome.extension.getURL('injected/genesys.js') );
+        loadJsFile( chrome.runtime.getURL('injected/genesys.js') );
     }
     else if (urlMatches("us1.teamdynamix.com")) {
-        loadJsFile( chrome.extension.getURL('injected/ai_form.js') );
+        loadJsFile( chrome.runtime.getURL('injected/ai_form.js') );
     }
     else if (urlMatches(["github.io/Becker-Ticketer", "127.0.0.1:5500", "localhost:5500"])) {
-        loadJsFile( chrome.extension.getURL('injected/confirm_extension.js') );
+        loadJsFile( chrome.runtime.getURL('injected/confirm_extension.js') );
     }
 });

@@ -1,24 +1,27 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"name": "Becker-Ticketer",
 	"author": "Michael Becker",
 	"description": "Create AI tickets straight from Genesys!",
 	"version": "1.0",
 	"icons": {
-		"225": "images/Genesys.png"
+	  	"225": "images/logo-circle.png"
 	},
-	"browser_action": {
-		"default_icon": "images/Genesys.png",
+	"action": {
+		"default_icon": "images/logo-circle.png",
 		"default_title": "Becker-Ticketer",
 		"default_popup": "popup.html"
 	},
 	"web_accessible_resources": [
-		"injected/*"
+		{
+			"resources": ["injected/*"],
+			"matches": ["<all_urls>"]
+		}
 	],
 	"content_scripts": [
 		{
-			"matches": [ "http://*/*", "https://*/*" ],
-			"js": [ "inject_to_the_right_pages.js" ],
+			"matches": ["http://*/*", "https://*/*"],
+			"js": ["inject_to_the_right_pages.js"],
 			"all_frames": true,
 			"run_at": "document_start"
 		}
