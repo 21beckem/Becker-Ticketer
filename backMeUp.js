@@ -30,17 +30,22 @@ class BackMeUp {
     static restoreLocalTicket() {
         let localTicket = localStorage.getItem('Becker_Ticker_'+BackMeUp.ticketId);
         if (localTicket) {
+            const thisTicket = JSON.parse(localTicket);
             BackMeUp.includedVars = JSON.parse(localTicket).includedVars;
             Array.from(document.querySelectorAll('input[type=text]')).forEach((el, idx) => {
-                el.value = JSON.parse(localTicket).textInputs[idx];
+                if (el.classList.contains('autoComplete')) {
+                    el.value = thisTicket.textInputs[idx][0];
+                    el.setAttribute('data-value', thisTicket.textInputs[idx][1]);
+                }
+                el.value = thisTicket.textInputs[idx];
                 el.dispatchEvent(new Event('input'));
             });
             Array.from(document.querySelectorAll('input[type=radio]')).forEach((el, idx) => {
-                el.checked = JSON.parse(localTicket).radioInputs[idx];
+                el.checked = thisTicket.radioInputs[idx];
                 el.dispatchEvent(new Event('input'));
             });
             Array.from(document.querySelectorAll('textarea')).forEach((el, idx) => {
-                el.value = JSON.parse(localTicket).texareaInputs[idx];
+                el.value = thisTicket.texareaInputs[idx];
                 el.dispatchEvent(new Event('input'));
             });
             return true;
@@ -63,7 +68,11 @@ class BackMeUp {
             texareaInputs: []
         };
         Array.from(document.querySelectorAll('input[type=text]')).forEach(el => {
-            newJson.textInputs.push(el.value);
+            if (el.classList.contains('autoComplete')) {
+                newJson.textInputs.push([el.value, el.getAttribute('data-value')]);
+            } else {
+                newJson.textInputs.push(el.value);
+            }
         });
         Array.from(document.querySelectorAll('input[type=radio]')).forEach(el => {
             newJson.radioInputs.push(el.checked);

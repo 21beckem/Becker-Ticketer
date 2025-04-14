@@ -6,12 +6,12 @@ const TDcontrol = new TDcontroler(_("TDFormFrame"));
 document.querySelectorAll('input').forEach(el => el.autocomplete = 'off');
 AccordianSections.forEach((el) => {
     if (el.classList.contains("active")) {
-        el.nextElementSibling.style.height = (document.body.scrollHeight - 165) + "px";
+        el.nextElementSibling.style.height = (window.innerHeight - 165) + "px";
     }
     el.open = (yesOrNo) => {
         if (yesOrNo) {
             el.classList.add("active");
-            el.nextElementSibling.style.height = (document.body.scrollHeight - 165) + "px";
+            el.nextElementSibling.style.height = (window.innerHeight - 165) + "px";
         } else {
             el.classList.remove("active");
             el.nextElementSibling.style.height = null;
@@ -39,7 +39,7 @@ function canIopenThisAccordionSection(elId) {
 document.documentElement.style.setProperty('--accordion-transition', 'height 0.5s ease');
 // on doument resize, re-set height property
 const resizeToWindowHeight = () => {
-    document.querySelector('.accordion.active + .accordion-panel').style.height = (document.body.scrollHeight - 170) + "px";
+    document.querySelector('.accordion.active + .accordion-panel').style.height = (window.innerHeight - 165) + "px";
 }
 document.addEventListener("click", (e) => resizeToWindowHeight);
 window.addEventListener('resize', resizeToWindowHeight);
