@@ -54,7 +54,11 @@ Array.from(document.querySelectorAll('*[onenter]')).forEach((el) => {
 });
 
 function openLinkFromTop(el) {
-    top.postMessage({type: 'open_a_new_tab', url: el.getAttribute('href')}, '*');
+    if (top === window) {
+        window.open(el.getAttribute('href'), '_blank');
+    } else {
+        top.postMessage({type: 'open_a_new_tab', url: el.getAttribute('href')}, '*');
+    }
 }
 
 function detectSearchQueryType(inVal, outputSpan) {
