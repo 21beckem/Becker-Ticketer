@@ -28,6 +28,7 @@ AccordianSections.forEach((el) => {
     el.addEventListener("click", el.setActive );
 });
 function canIopenThisAccordionSection(elId) {
+    return true;
     if (elId == 'IdentifyAccordionBtn') return true; // always allow Identify tab to open
     if (elId == 'AssistAccordionBtn' || elId == 'ReviewAccordionBtn') {
         if (SelectedPersonId == '') return false; // can't open Assist tab if no person is selected
@@ -230,7 +231,7 @@ async function submitTicketToTD() {
     if (!gg) { return; }
 
 
-    if ( !await JSAlert.confirm('<br>Are you sure you want to submit this ticket?<br><br>', 'Submit Ticket?', JSAlert.Icons.Success, 'Yes, Submit Ticket', 'No, Cancel') ) { return; }
+    if ( !await JSAlert.confirm('<br>Are you sure you want to submit this ticket?<br><br>', 'Submit Ticket?', 'img/Becker-Ticketer%20Logo.svg', 'Yes, Submit Ticket', 'No, Cancel') ) { return; }
     showLoader(true);
 
     const title = _('Title_toSubmit').value;
@@ -267,6 +268,10 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
 
 
     inputEl.addEventListener("input", function () {
+        // trigger deselect callback
+        if (inputEl.getAttribute("data-value")!=null && inputEl.getAttribute("deselect-callback")!=null) {
+            eval(inputEl.getAttribute("deselect-callback"));
+        }
         if (inputEl.classList.contains("oneOfTheKBinputs")) {
             document.getElementsByClassName('oneOfTheKBinputs').forEach(thisInputEl => {
                 thisInputEl.removeAttribute("data-value");
@@ -309,6 +314,11 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
                     inputEl.setAttribute("data-value", item.value);
                     inputEl.value = item.text;
                     resultsUl.innerHTML = "";
+
+                    // trigger callback
+                    if (inputEl.getAttribute('select-callback')!=null) {
+                        eval(inputEl.getAttribute('select-callback'));
+                    }
                 });
                 resultsUl.appendChild(div);
             });

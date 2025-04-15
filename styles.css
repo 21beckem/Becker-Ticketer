@@ -163,6 +163,27 @@ input.wide {
     box-shadow: 0px 0px 0px 3px var(--gen-green);
 }
 
+.popoutBtn {
+    width: fit-content;
+    border: 1px solid black;
+    padding: 3px 3px 3px;
+    float: right;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    opacity: 1;
+    border-radius: 0 0 7px 7px;
+    box-shadow: 0 0 0 1px var(--gen-green);
+}
+.popoutBtn[disabled] {
+    pointer-events: none;
+    box-shadow: none;
+}
+#useTemplateBtn { transform: translate(-10px, -3px); }
+#useTemplateBtn[disabled] { transform: translate(-10px, -27px); }
+#templateOptionsBtn { transform: translate(-10px, -8px); }
+#templateOptionsBtn[disabled] { transform: translate(-10px, -32px); }
+
 /* Custom Radio Buttons */
 input[type="radio"] { display: none }
 div.either_or {
@@ -260,7 +281,7 @@ input[type="radio"]:checked+label.either_or {
     background-color: white;
     overflow-y: scroll;
     max-height: 200px;
-    z-index: 2;
+    z-index: 5;
 }
 .autoComplete_wrapper ul:not(:has(li)) {
     display: none;
