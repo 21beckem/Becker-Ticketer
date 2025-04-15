@@ -53,6 +53,10 @@ Array.from(document.querySelectorAll('*[onenter]')).forEach((el) => {
     });
 });
 
+function openLinkFromTop(el) {
+    top.postMessage({type: 'open_a_new_tab', url: el.getAttribute('href')}, '*');
+}
+
 function detectSearchQueryType(inVal, outputSpan) {
     inVal = inVal.trim().toLowerCase();
     if (inVal == '') {

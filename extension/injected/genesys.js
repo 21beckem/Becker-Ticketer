@@ -45,4 +45,11 @@ var styleSheet = document.createElement("style");
 styleSheet.textContent = `*[title="Becker Ticketer Installer"] { display: none !important; }`;
 document.head.appendChild(styleSheet);
 
+window.addEventListener('message', function(event) {
+    if (event.data.hasOwnProperty('type') && event.data.type === 'open_a_new_tab') {
+        window.open(event.data.url, '_blank');
+    }
+    console.log('Received message:', event.data);
+});
+
 })();
