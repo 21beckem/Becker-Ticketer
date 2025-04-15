@@ -33,7 +33,8 @@
     
     const taskbar = document.getElementById('taskbar');
     const icons = document.querySelectorAll('#taskbar div');
-    const revealThreshold = 70;  // pixels from right edge to trigger taskbar reveal
+    const revealThreshold = 30;  // pixels from right edge to trigger taskbar reveal
+    let inRange = false;
 
     // Event listener for mouse movement across the document
     window.addEventListener('mousemove', (event) => {
