@@ -12,7 +12,7 @@ class Templates {
         
             return rows.map(function (row) {
                 row = row.split(",").map((cell) => {
-                    return cell.replace(/\"/g, "");;
+                    return cell.replace(/^"/, '').replace(/"$/, '').replace(/\"\"/g, "\"");
                 });
                 
                 row[3] = row[3].replaceAll('*@*', '\n').replaceAll('~@~', ',');
@@ -83,16 +83,15 @@ function onKBselectionChange(selected) {
         _('templateOptionsBtn').setAttribute('disabled', '');
         currentTemplate = null;
     } else {
+        _('templateOptionsBtn').removeAttribute('disabled');
         let selectedKB = _('KBSearchQuery').getAttribute('data-value');
         let foundTemplates = Templates.myTemplates.filter((template) => template[2] == 'K'+selectedKB);
         if (foundTemplates.length == 0) {
             _('useTemplateBtn').setAttribute('disabled', '');
-            _('templateOptionsBtn').setAttribute('disabled', '');
             currentTemplate = null;
             return;
         }
         _('useTemplateBtn').removeAttribute('disabled');
-        _('templateOptionsBtn').removeAttribute('disabled');
         currentTemplate = foundTemplates[0];
     }
 }
