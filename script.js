@@ -192,7 +192,7 @@ async function generateTicketWithAI() {
     // get Interaction Link
     let convLink = '';
     if (GenesysAuth.conversation && GenesysAuth.conversation.id) {
-        convLink = ' \n\nInteration Link: https://apps.usw2.pure.cloud/directory/#/engage/admin/interactions/' + GenesysAuth.conversation.id;
+        convLink = ' \n\nInteraction Link: https://apps.usw2.pure.cloud/directory/#/engage/admin/interactions/' + GenesysAuth.conversation.id;
     }
 
     _('DescriptionTextarea_ToSubmit').value = result.desc + convLink; // set the description
@@ -214,6 +214,7 @@ async function submitTicketToTD() {
     // verify that fields are filled out
     let gg = true;
     fieldsToCheck = ['Responsible_toSubmit', 'Title_toSubmit', 'KB_toSubmit', 'DescriptionTextarea_ToSubmit'];
+    
     fieldsToCheck.forEach((field) => {
         let thisEl = _(field);
         thisEl.addEventListener('input', () => {

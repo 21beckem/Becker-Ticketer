@@ -100,7 +100,7 @@ label:not(.either_or) {
     margin-top: 20px;
     margin-bottom: 5px;
 }
-input[type="text"], textarea {
+input[type="text"], textarea, select {
     width: calc(100% - 20px);
     resize: none;
     padding: 10px;
@@ -228,6 +228,47 @@ input[type="radio"]:checked+label.either_or {
     pointer-events: none;
 }
 
+/* Custom Select */
+#incidentExtraInfoWrapper {
+    border: 0.5px solid var(--gen-dark-gray);
+    padding: 0 10px 10px;
+    border-radius: 5px;
+    display: none;
+}
+div:has(#Type_toSubmit_Incident:checked) + #incidentExtraInfoWrapper {
+    display: block;
+}
+.custom-select {
+    position: relative;
+}
+
+.custom-select select {
+    appearance: none;
+    width: 100%;
+}
+
+.custom-select::before,
+.custom-select::after {
+    --size: 0.3rem;
+    content: "";
+    position: absolute;
+    right: 1rem;
+    pointer-events: none;
+}
+
+.custom-select::before {
+    border-left: var(--size) solid transparent;
+    border-right: var(--size) solid transparent;
+    border-bottom: var(--size) solid black;
+    top: 40%;
+}
+
+.custom-select::after {
+    border-left: var(--size) solid transparent;
+    border-right: var(--size) solid transparent;
+    border-top: var(--size) solid black;
+    top: 55%;
+}
 
 /* Autocomplete */
 .autoComplete_wrapper {

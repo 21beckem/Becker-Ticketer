@@ -54,7 +54,7 @@
         <div class="popoutBtn" onclick="saveTemplateMenu()" id="templateOptionsBtn" disabled>Save As Template</div>
         <br><br>
         <center>
-            <button class="submitBtn" onclick="generateTicketWithAI()">Gernerate Ticket with AI</button>
+            <button class="submitBtn" onclick="generateTicketWithAI()">Generate Ticket with AI</button>
         </center>
     </div>
 
@@ -69,6 +69,33 @@
             <label class="either_or one" for="Type_toSubmit_Incident">Incident</label>
             <input type="radio" name="Type_toSubmit" id="Type_toSubmit_Service_Request" data-value="46" checked="checked" />
             <label class="either_or two" for="Type_toSubmit_Service_Request">Service Request</label>
+        </div>
+
+        <div id="incidentExtraInfoWrapper">
+            <label for="impact_toSubmit">Amount of people impacted:</label>
+            <div class="custom-select"><select name="impact_toSubmit" id="impact_toSubmit">
+                <option value="" style="display: none;"></option>
+                <option value="12;Fewer than 9 people are affected.">>10</option>
+                <option value="13;10-99 people are affected.">10-99</option>
+                <option value="14;100+ people or a critical system is affected.s">100+</option>
+            </select></div>
+            
+            <label for="urgency_toSubmit">There is ____ work around available</label>
+            <div class="custom-select"><select name="urgency_toSubmit" id="urgency_toSubmit">
+                <option value="" style="display: none;"></option>
+                <option value="16;An easy work around is available">an easy</option>
+                <option value="17;An inconvenient work around is available">an inconvenient</option>
+                <option value="18;No work around is available">no</option>
+            </select></div>
+
+            <label for="priority_toSubmit">Priority:</label>
+            <div class="custom-select"><select name="priority_toSubmit" id="priority_toSubmit">
+                <option value="22;Emergency (1)">Emergency (1)</option>
+                <option value="20;High (2)">High (2)</option>
+                <option value="21;Medium/High (3)" selected>Medium/High (3)</option>
+                <option value="19;Medium (4)">Medium (4)</option>
+                <option value="34;Low (5)">Low (5)</option>
+            </select></div>
         </div>
 
         <label for="Responsible_toSubmit">Responsible</label>

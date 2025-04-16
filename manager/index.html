@@ -254,6 +254,14 @@ class popupTicket {
         popupTicket.overlay.style.display = "block";
     }
 }
+window.addEventListener('message', function(event) {
+    if (event.data.hasOwnProperty('type')) {
+        if (event.data.type === 'close_current_ticket') {
+            popupTicket.close();
+        }
+    }
+    console.log('Received message:', event.data);
+});
     </script>
 </body>
 </html>

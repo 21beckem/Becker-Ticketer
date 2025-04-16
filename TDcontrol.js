@@ -68,7 +68,11 @@ class TDcontroler {
             "_Result": "Becker Ticketer"
         };
         console.log(toSubmit);
-        let res = await this.sendMessageToIframe('getAroundTheForm', 'a5ad1f60-b8e9-4d02-92bb-644f9149965b', toSubmit);
+        let flowId = 'a5ad1f60-b8e9-4d02-92bb-644f9149965b';
+        if (location.href.includes('http://localhost') || location.href.includes('http://127.0.0.1')) {
+            flowId = '92b1a324-64ac-4544-8b4e-7786cbe08706';
+        }
+        let res = await this.sendMessageToIframe('getAroundTheForm', flowId, toSubmit);
         console.log(res);
         
         res = this.checkIfSubmissionResultIsError(res);
@@ -82,7 +86,10 @@ class TDcontroler {
                 <br><br>
                 <a href="javascript:reloadFromBeginning()">Submit Another Ticket</a>
                 <br><br>
-            `, 'Ticket submitted successfully', JSAlert.Icons.Success);
+            `, 'Ticket submitted successfully', JSAlert.Icons.Success).then((x) =>{
+                parent.postMessage({type: 'close_current_ticket'}, '*');
+                reloadFromBeginning();
+            });
             BackMeUp.disableBackup();
             BackMeUp.removeBackup();
             return res;
