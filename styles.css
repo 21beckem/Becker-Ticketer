@@ -210,11 +210,11 @@ input[type="radio"]:checked+label.either_or {
     color: white;
 }
 .error {
-    animation: fadeInOutError 2s infinite;
+    animation: fadeInOutError 2s linear infinite;
 }
 @keyframes fadeInOutError {
     0%, 100% {
-        box-shadow: 0px 0px 5px 0px var(--gen-red);
+        box-shadow: 0px 0px 3px 2px var(--gen-red);
     }
     50% {
         box-shadow: none;
@@ -230,6 +230,7 @@ input[type="radio"]:checked+label.either_or {
 
 /* Custom Select */
 #incidentExtraInfoWrapper {
+    margin-top: 10px;
     border: 0.5px solid var(--gen-dark-gray);
     padding: 0 10px 10px;
     border-radius: 5px;
@@ -241,12 +242,16 @@ div:has(#Type_toSubmit_Incident:checked) + #incidentExtraInfoWrapper {
 .custom-select {
     position: relative;
 }
-
 .custom-select select {
     appearance: none;
     width: 100%;
 }
-
+.custom-select select[selected] {
+    filter: drop-shadow(1px 1px 0px var(--gen-green))
+        drop-shadow(-1px 1px 0px var(--gen-green))
+        drop-shadow(-1px -1px 0px var(--gen-green))
+        drop-shadow(1px -1px 0px var(--gen-green));
+}
 .custom-select::before,
 .custom-select::after {
     --size: 0.3rem;
@@ -255,14 +260,12 @@ div:has(#Type_toSubmit_Incident:checked) + #incidentExtraInfoWrapper {
     right: 1rem;
     pointer-events: none;
 }
-
 .custom-select::before {
     border-left: var(--size) solid transparent;
     border-right: var(--size) solid transparent;
     border-bottom: var(--size) solid black;
     top: 40%;
 }
-
 .custom-select::after {
     border-left: var(--size) solid transparent;
     border-right: var(--size) solid transparent;

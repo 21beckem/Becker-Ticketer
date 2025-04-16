@@ -78,6 +78,7 @@ async function saveTemplateMenu() {
     }
 }
 function onKBselectionChange(selected) {
+    if (!GenesysAuth.genesysConnected) return;
     if (!selected) {
         _('useTemplateBtn').setAttribute('disabled', '');
         _('templateOptionsBtn').setAttribute('disabled', '');

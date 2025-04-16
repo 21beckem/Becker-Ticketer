@@ -259,6 +259,9 @@ window.addEventListener('message', function(event) {
         if (event.data.type === 'close_current_ticket') {
             popupTicket.close();
         }
+        else if (event.data.type === 'reload') {
+            location.reload();
+        }
     }
     console.log('Received message:', event.data);
 });

@@ -18,6 +18,9 @@
 </head>
 
 <body>
+    <!-- preload logo -->
+    <img src="img/Becker-Ticketer Logo.svg" alt="" style="display: none">
+    <img src="img/Becker-Ticketer Logo.jpg" alt="" style="display: none">
     <div id="taskbar">
         <div onclick="openLinkFromTop(this)" href="https://assist.byui.edu/" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=bf2f6281-9891-45c2-a68c-d214671a40b8.png)"></div>
         <div onclick="openLinkFromTop(this)" href="https://web.byui.edu/username/HelpDesk/ResetPassword" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=1d04f869-dbf6-46f6-aa87-caaab1c4583e.png)"></div>
@@ -72,34 +75,42 @@
         </div>
 
         <div id="incidentExtraInfoWrapper">
-            <label for="impact_toSubmit">Amount of people impacted:</label>
-            <div class="custom-select"><select name="impact_toSubmit" id="impact_toSubmit">
+            <label for="impact_toSubmit" style="margin-top: 10px;">Amount of people impacted:</label>
+            <div class="custom-select"><select name="impact_toSubmit" id="impact_toSubmit" onchange="(this.value==''?this.removeAttribute('selected'):this.setAttribute('selected',''))">
                 <option value="" style="display: none;"></option>
                 <option value="12;Fewer than 9 people are affected.">>10</option>
                 <option value="13;10-99 people are affected.">10-99</option>
                 <option value="14;100+ people or a critical system is affected.s">100+</option>
             </select></div>
-            
             <label for="urgency_toSubmit">There is ____ work around available</label>
-            <div class="custom-select"><select name="urgency_toSubmit" id="urgency_toSubmit">
+            <div class="custom-select"><select name="urgency_toSubmit" id="urgency_toSubmit" onchange="(this.value==''?this.removeAttribute('selected'):this.setAttribute('selected',''))">
                 <option value="" style="display: none;"></option>
                 <option value="16;An easy work around is available">an easy</option>
                 <option value="17;An inconvenient work around is available">an inconvenient</option>
                 <option value="18;No work around is available">no</option>
             </select></div>
-
             <label for="priority_toSubmit">Priority:</label>
-            <div class="custom-select"><select name="priority_toSubmit" id="priority_toSubmit">
+            <div class="custom-select"><select name="priority_toSubmit" id="priority_toSubmit" selected>
                 <option value="22;Emergency (1)">Emergency (1)</option>
                 <option value="20;High (2)">High (2)</option>
                 <option value="21;Medium/High (3)" selected>Medium/High (3)</option>
                 <option value="19;Medium (4)">Medium (4)</option>
                 <option value="34;Low (5)">Low (5)</option>
             </select></div>
+            <table><tr>
+                <td style="width: 60%;">
+                    <label for="building_toSubmit">Building:</label>
+                    <input type="text" id="building_toSubmit" data-obj="Buildings" class="autoComplete" name="building_toSubmit">
+                </td>
+                <td style="padding-left: 5px;">
+                    <label for="room_toSubmit">Room:</label>
+                    <input type="text" id="room_toSubmit" name="room_toSubmit" class="wide">
+                </td>
+            </tr></table>
         </div>
 
         <label for="Responsible_toSubmit">Responsible</label>
-        <input type="text" id="Responsible_toSubmit" class="autoComplete" name="Responsible_toSubmit">
+        <input type="text" id="Responsible_toSubmit" data-obj="ResponsibleGroups" class="autoComplete" name="Responsible_toSubmit">
 
         <label for="Status_toSubmit">Status</label>
         <div class="either_or">

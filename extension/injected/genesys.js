@@ -10,6 +10,10 @@ function openBeckerTicketManagerWindow(open = true) {
         hiddenTicketerBtn.click();
         setTimeout(()=>{ hiddenTicketerBtn.click() }, 500);
     }
+    // reload that window
+    Array.from(document.querySelectorAll('iframe'))
+        .filter(x => x.src.includes('Becker-Ticketer'))[0]
+        .contentWindow.postMessage({type: 'reload'}, '*');
 }
 // wait until page loads, then insert ticket button on the left sidebar
 (async function() {

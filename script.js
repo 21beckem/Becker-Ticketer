@@ -146,7 +146,7 @@ function populateRequestorCards() {
         }
         if (result.UID == SelectedPersonId) {
             personCard.classList.add('selected');
-            top.postMessage({type: 'rename_interaction', name: result.FullName}, '*');
+            parent.postMessage({type: 'rename_interaction', name: result.FullName}, '*');
             document.querySelector('#IdentifyAccordionBtn span').innerHTML = ': ' + result.FullName;
         }
         personCard.setAttribute('id', result.UID);
@@ -179,8 +179,9 @@ function selectPersonAndStartTicket(U_identifier) {
     
     let person = PersonSearchResults.filter((per) => per.UID === SelectedPersonId)[0];
     _('RequesterName_toSubmit').value = person.FullName;
+    _('RequesterName_toSubmit').classList.remove('error');
     document.querySelector('#IdentifyAccordionBtn span').innerHTML = ': ' + person.FullName;
-    top.postMessage({type: 'rename_interaction', name: person.FullName}, '*');
+    parent.postMessage({type: 'rename_interaction', name: person.FullName}, '*');
     _('AssistAccordionBtn').setActive();
 }
 
@@ -213,8 +214,11 @@ async function generateTicketWithAI() {
 async function submitTicketToTD() {
     // verify that fields are filled out
     let gg = true;
-    fieldsToCheck = ['Responsible_toSubmit', 'Title_toSubmit', 'KB_toSubmit', 'DescriptionTextarea_ToSubmit'];
-    
+    let fieldsToCheck = ['RequesterName_toSubmit', 'Responsible_toSubmit', 'Title_toSubmit', 'KB_toSubmit', 'DescriptionTextarea_ToSubmit'];
+    // if an incident, add the rest of the fields
+    if (_('Type_toSubmit_Incident').checked) {
+        fieldsToCheck.push('impact_toSubmit', 'urgency_toSubmit', 'priority_toSubmit', 'building_toSubmit', 'room_toSubmit');
+    }
     fieldsToCheck.forEach((field) => {
         let thisEl = _(field);
         thisEl.addEventListener('input', () => {
@@ -237,7 +241,10 @@ async function submitTicketToTD() {
             }
         }
     });
-    if (!gg) { return; }
+    if (!gg) { 
+        JSAlert.alert('Looks like you forgot something. Go back and make sure you filled in every field.', 'Incomplete', JSAlert.Icons.Failed);
+        return;
+    }
 
 
     if ( !await JSAlert.confirm('<br>Are you sure you want to submit this ticket?<br><br>', 'Submit Ticket?', 'img/Becker-Ticketer%20Logo.svg', 'Yes, Submit Ticket', 'No, Cancel') ) { return; }
@@ -257,7 +264,7 @@ async function submitTicketToTD() {
 }
 
 
-let timeout;
+let autocompleteTimeout;
 document.getElementsByClassName("autoComplete").forEach(inputEl => {
     let autoComplete_wrapper = document.createElement("div");
     autoComplete_wrapper.classList.add("autoComplete_wrapper");
@@ -290,12 +297,12 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
         }
         resultsUl.innerHTML = '';
         inputEl.removeAttribute("data-value");
-        clearTimeout(timeout);
+        clearTimeout(autocompleteTimeout);
         let query = this.value.trim();
         
         if (query.length < 2) return;
 
-        timeout = setTimeout(async () => {
+        autocompleteTimeout = setTimeout(async () => {
             // set Ul width
             resultsUl.style.width = (inputEl.offsetWidth - 2) + "px";
             resultsUl.innerHTML = '<li>Loading...</li>';
@@ -304,7 +311,7 @@ document.getElementsByClassName("autoComplete").forEach(inputEl => {
             if (inputEl.classList.contains("oneOfTheKBinputs")) {
                 data = await TDcontrol.searchKBs(query);  // seark KBs
             } else {
-                data = ResponsibleGroups.filter(item => item.text.toLowerCase().includes(query.toLowerCase()));
+                data = eval(inputEl.getAttribute('data-obj') + `.filter(item => item.text.toLowerCase().includes(query.toLowerCase()))`);
             }
 
             resultsUl.innerHTML = '';
