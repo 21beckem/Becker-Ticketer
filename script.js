@@ -146,6 +146,7 @@ function populateRequestorCards() {
         }
         if (result.UID == SelectedPersonId) {
             personCard.classList.add('selected');
+            top.postMessage({type: 'rename_interaction', name: result.FullName}, '*');
             document.querySelector('#IdentifyAccordionBtn span').innerHTML = ': ' + result.FullName;
         }
         personCard.setAttribute('id', result.UID);
