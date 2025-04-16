@@ -46,8 +46,15 @@ styleSheet.textContent = `*[title="Becker Ticketer Installer"] { display: none !
 document.head.appendChild(styleSheet);
 
 window.addEventListener('message', function(event) {
-    if (event.data.hasOwnProperty('type') && event.data.type === 'open_a_new_tab') {
-        window.open(event.data.url, '_blank');
+    if (event.data.hasOwnProperty('type')) {
+        if (event.data.type === 'open_a_new_tab') {
+            window.open(event.data.url, '_blank');
+        }
+        else if (event.data.type === 'rename_interaction') {
+            Array.from(document.querySelectorAll('.interactions .interactions .interaction-group'))
+                .filter(x => x.className.includes('selected'))[0]
+                .querySelectorAll('[role="heading"], .header-text')[0].innerText = event.data.name;
+        }
     }
     console.log('Received message:', event.data);
 });

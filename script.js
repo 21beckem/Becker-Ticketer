@@ -179,6 +179,7 @@ function selectPersonAndStartTicket(U_identifier) {
     let person = PersonSearchResults.filter((per) => per.UID === SelectedPersonId)[0];
     _('RequesterName_toSubmit').value = person.FullName;
     document.querySelector('#IdentifyAccordionBtn span').innerHTML = ': ' + person.FullName;
+    top.postMessage({type: 'rename_interaction', name: person.FullName}, '*');
     _('AssistAccordionBtn').setActive();
 }
 
