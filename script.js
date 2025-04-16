@@ -187,7 +187,13 @@ async function generateTicketWithAI() {
     showLoader(true);
     let result = await TDcontrol.generateAIDescription(_('agentNotesTextarea').value);
 
-    _('DescriptionTextarea_ToSubmit').value = result.desc; // set the description
+    // get Interaction Link
+    let convLink = '';
+    if (GenesysAuth.conversation && GenesysAuth.conversation.id) {
+        convLink = ' \n\nInteration Link: https://apps.usw2.pure.cloud/directory/#/engage/admin/interactions/' + GenesysAuth.conversation.id;
+    }
+
+    _('DescriptionTextarea_ToSubmit').value = result.desc + convLink; // set the description
     _('Title_toSubmit').value = result.title; // set the title
     if (result.isIncident) { // select the correct radio buttons for incident or service request
         _('Type_toSubmit_Incident').checked = true;

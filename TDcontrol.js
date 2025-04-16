@@ -48,7 +48,7 @@ class TDcontroler {
         description = String(description).trim();
         let identity = "login@byui.edu";
         try {
-            identity = GenesysAuth.userMe.username;
+            identity = GenesysAuth.userMe.email;
         } catch (error) {}
         const toSubmit = {
             "Title": title,
