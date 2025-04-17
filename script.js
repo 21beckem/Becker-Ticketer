@@ -197,7 +197,7 @@ async function generateTicketWithAI() {
     }
 
     _('DescriptionTextarea_ToSubmit').value = result.desc + convLink; // set the description
-    _('Title_toSubmit').value = result.title.trim().replace(/^(title:)/,'').trim().replace(/^"(.*)"$/g, '$1') // set the title and remove extra quotes and 'title:' from the beginning
+    _('Title_toSubmit').value = result.title.trim().replace(/^(title:)/,'').replace(/^(Title:)/,'').trim().replace(/^"(.*)"$/g, '$1') // set the title and remove extra quotes and 'title:' from the beginning
     if (result.isIncident) { // select the correct radio buttons for incident or service request
         _('Type_toSubmit_Incident').checked = true;
         _('Status_toSubmit_New').checked = true;
