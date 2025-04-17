@@ -35,7 +35,9 @@ class BackMeUp {
             Array.from(document.querySelectorAll('input[type=text]')).forEach((el, idx) => {
                 if (el.classList.contains('autoComplete')) {
                     el.value = thisTicket.textInputs[idx][0];
-                    el.setAttribute('data-value', thisTicket.textInputs[idx][1]);
+                    if (thisTicket.textInputs[idx][1] != 'null' && thisTicket.textInputs[idx][1] != 'undefined' && thisTicket.textInputs[idx][1] != '' && thisTicket.textInputs[idx][1] != null && thisTicket.textInputs[idx][1] != undefined) {
+                        el.setAttribute('data-value', thisTicket.textInputs[idx][1]);
+                    }
                 } else {
                     el.value = thisTicket.textInputs[idx];
                     el.dispatchEvent(new Event('input'));
@@ -82,6 +84,7 @@ class BackMeUp {
             newJson.texareaInputs.push(el.value);
         });
         localStorage.setItem('Becker_Ticker_'+BackMeUp.ticketId, JSON.stringify(newJson));
+        BackMeUp.haveSavedYet = true;
     }
     static setupInputListeners() {
         Array.from(document.querySelectorAll('input[type=radio], input[type=text], textarea')).forEach(el => {
@@ -99,6 +102,7 @@ class BackMeUp {
     }
     static ticketId = null;
     static stopSaving = false;
+    static haveSavedYet = false;
 }
 
 

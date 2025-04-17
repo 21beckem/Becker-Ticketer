@@ -83,6 +83,10 @@ class GenAuth {
         });
         this.myClientApp.lifecycle.addStopListener(() => {
             this.genesysConnected = false;
+            try {
+                let completed = BackMeUp.stopSaving || !BackMeUp.haveSavedYet;
+                top.postMessage({type: 'interaction_lifecycle_stop', ticketCompleted: completed}, '*');
+            } catch (e) {}
             try { BackMeUp.saveTicketLocally(); } catch (e) {}
             this.logLifecycleEvent('App Lifecycle Event: stop', true);
         

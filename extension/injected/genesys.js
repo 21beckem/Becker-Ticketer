@@ -59,6 +59,9 @@ window.addEventListener('message', function(event) {
                 .filter(x => x.className.includes('selected'))[0]
                 .querySelectorAll('[role="heading"], .header-text')[0].innerText = event.data.name;
         }
+        else if (event.data.type === 'interaction_lifecycle_stop') {
+            openBeckerTicketManagerWindow(!event.data.ticketCompleted);
+        }
     }
     console.log('Received message:', event.data);
 });
