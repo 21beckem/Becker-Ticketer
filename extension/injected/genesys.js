@@ -63,4 +63,25 @@ window.addEventListener('message', function(event) {
     console.log('Received message:', event.data);
 });
 
+
+// add button to overlay that says you'll need to refresh the page
+let hideOverlayInterval = setInterval(() => {
+    if (document.querySelector('.session-invalidated')) {
+        let newBtn = document.createElement('button');
+        newBtn.innerHTML = 'Hide This Overlay';
+        newBtn.style.cssText = `
+            padding: 10px 30px;
+            background-color: white;
+            color: #ff451a;
+            border: 1px solid #ff451a;
+            cursor: pointer;`;
+        newBtn.addEventListener('click', () => {
+            document.getElementById('modal-overlays').remove();
+        });
+        let invalidatedText = document.querySelector('.session-invalidated');
+        invalidatedText.parentNode.insertBefore(newBtn, invalidatedText.nextSibling);
+        clearInterval(hideOverlayInterval);
+    }
+}, 1000);
+
 })();
