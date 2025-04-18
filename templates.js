@@ -25,7 +25,7 @@ class Templates {
         let res = await fetch(url);
         res = await res.text();
 
-        if (res.toLowerCase().includes('error')) {
+        if (res.toLowerCase().startsWith('error:')) {
             console.error(res);
             return [[]];
         } else if (res == '') {
