@@ -18,13 +18,28 @@ function urlMatches(urlArr) {
     return found;
 }
 window.addEventListener('load', () => {
+    // if (urlMatches("apps.usw2.pure.cloud/directory")) {
+    //     loadJsFile( 'https://21beckem.github.io/Becker-Ticketer/extension/injected/genesys.js' );
+    // }
+    // else if (urlMatches("us1.teamdynamix.com")) {
+    //     loadJsFile( 'https://21beckem.github.io/Becker-Ticketer/extension/injected/ai_form.js' );
+    // }
+    // else if (urlMatches(["github.io/Becker-Ticketer", "127.0.0.1:5500", "localhost:5500"])) {
+    //     loadJsFile( 'https://21beckem.github.io/Becker-Ticketer/extension/injected/confirm_extension.js' );
+    // }
+    // else if (urlMatches("apps.usw2.pure.cloud/messaging-gadget")) {
+    //     loadJsFile( 'https://21beckem.github.io/Becker-Ticketer/extension/injected/injected/chat_responses.js' );
+    // }
     if (urlMatches("apps.usw2.pure.cloud/directory")) {
-        loadJsFile( 'https://21beckem.github.io/Becker-Ticketer/extension/injected/genesys.js' );
+        loadJsFile( chrome.runtime.getURL('injected/genesys.js') );
     }
     else if (urlMatches("us1.teamdynamix.com")) {
-        loadJsFile( 'https://21beckem.github.io/Becker-Ticketer/injected/ai_form.js' );
+        loadJsFile( chrome.runtime.getURL('injected/ai_form.js') );
     }
     else if (urlMatches(["github.io/Becker-Ticketer", "127.0.0.1:5500", "localhost:5500"])) {
-        loadJsFile( 'https://21beckem.github.io/Becker-Ticketer/injected/confirm_extension.js' );
+        loadJsFile( chrome.runtime.getURL('injected/confirm_extension.js') );
+    }
+    else if (urlMatches("apps.usw2.pure.cloud/messaging-gadget")) {
+        loadJsFile( chrome.runtime.getURL('injected/chat_responses.js') );
     }
 });
