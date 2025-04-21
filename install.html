@@ -5,61 +5,106 @@
     <meta charset="UTF-8">
     <title>Install Becker-Ticketer Extension</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 2em auto;
-            line-height: 1.6;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        code {
-            background: #f4f4f4;
-            padding: 2px 4px;
-        }
-
-        pre {
-            background: #f4f4f4;
-            padding: 10px;
-            overflow-x: auto;
-        }
-
-        .section {
-            margin-bottom: 2em;
-        }
+/* Color Variables */
+:root {
+    --orange: #FF451A;
+    --gray: #33383D;
+    --gray-light: #f8f9fa;
+    --white: #ffffff;
+}
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--gray-light);
+    color: var(--gray);
+    margin: 0;
+    padding: 2em;
+}
+.wrapper {
+    max-width: 800px;
+    margin: auto;
+}
+h1 {
+    text-align: center;
+    color: var(--orange);
+    margin-bottom: 1em;
+}
+h2 {
+    color: var(--gray);
+    margin-top: 0;
+}
+.section {
+    background-color: var(--white);
+    border-left: 6px solid var(--orange);
+    padding: 1.5em;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2em;
+}
+ol {
+    margin: 1em 0;
+    padding-left: 1.2em;
+}
+ol li {
+    margin-bottom: 1.25em;
+}
+a {
+    color: var(--orange);
+    text-decoration: none;
+    font-weight: bold;
+}
+strong {
+    color: var(--orange);
+}
+a:hover {
+    text-decoration: underline;
+}
+input[type="text"] {
+    padding: 8px;
+    width: auto;
+    border: 2px solid var(--gray);
+    border-radius: 6px;
+    text-align: center;
+    transition: border-color 0.3s ease;
+    cursor: pointer;
+    color: var(--gray);
+}
+input[type="text"]:hover,
+input[type="text"]:focus {
+    border-color: var(--orange);
+    outline: none;
+}
     </style>
+    <script src="jsalert.js"></script>
 </head>
 
 <body>
-    <h1>Install Becker-Ticketer Extension</h1>
+    <div class="wrapper">
+        <h1>Install Becker-Ticketer</h1>
 
-    <!-- Chrome instructions -->
-    <div id="chrome-instructions" class="section">
-        <h2>Instructions for Google Chrome</h2>
-        <ol>
-            <li>Click here to download the extension: <a href="BeckerTicketerDownloader.bat">BeckerTicketerDownloader</a></li>
-            <li><strong>Double Cick</strong> on the downloaded file to open create the extenson</li>
-            <li>Copy and paste <code>chrome://extensions</code> in the address bar and press Enter.</li>
-            <li>Enable <strong>Developer mode</strong> (toggle it on in the top-right corner).</li>
-            <li>In the file explorer window that opened up after the extension was donloaded, click and drag the <strong>BeckerTicketerExtension</strong> folder to the exensions page.</li>
-            <li>Reload Genesys</li>
-        </ol>
-    </div>
+        <!-- Chrome instructions -->
+        <div id="chrome-instructions" class="section">
+            <h2>Instructions for Google Chrome</h2>
+            <ol>
+                <li>Click here to download the extension: <a href="Becker-Ticketer.zip">Becker-Ticketer</a></li>
+                <li>Copy and paste <input type="text" value="chrome://extensions" onclick="copyMyText(this)"> into the address bar and press Enter.</li>
+                <li>Click on the toggle to enable <strong>Developer mode</strong> (top-right corner).</li>
+                <li>Drag and drop the downloaded extension file into the extensions page.</li>
+                <li>Reload Genesys ✅</li>
+            </ol>
+        </div>
 
-    <!-- Edge instructions -->
-    <div id="edge-instructions" class="section">
-        <h2>Instructions for Microsoft Edge</h2>
-        <ol>
-            <li>Click here to download the extension: <a href="BeckerTicketerDownloader.bat">BeckerTicketerDownloader</a></li>
-            <li>Copy and paste <code>edge://extensions</code> in the address bar and press Enter.</li>
-            <li>Enable <strong>Developer mode</strong> (toggle it on in the lower-left corner).</li>
-            <li>Click on <strong>Load unpacked</strong> and select your extension's folder.</li>
-            <li>In the file explorer window that opened up after the extension was donloaded, click and drag the <strong>BeckerTicketerExtension</strong> folder to the exensions page.</li>
-            <li>Reload Genesys</li>
-        </ol>
+        <!-- Edge instructions -->
+        <div id="edge-instructions" class="section">
+            <h2>Instructions for Microsoft Edge</h2>
+            <ol>
+                <li>Click here to download the extension: <a href="Becker-Ticketer.zip">Becker-Ticketer</a></li>
+                <li>Copy and paste <input type="text" value="edge://extensions" onclick="copyMyText(this)"> into the address bar and press Enter.</li>
+                <li>Click on the toggle to enable <strong>Developer mode</strong> (lower-left corner).</li>
+                <li>Drag and drop the downloaded extension file into the extensions page.</li>
+                <li>Reload Genesys ✅</li>
+            </ol>
+        </div>
     </div>
 
     <script>
@@ -74,17 +119,25 @@
                 chromeDiv.style.display = "none";
                 edgeDiv.style.display = "block";
             }
-            // If not Edge, check for Chrome (make sure not to misidentify other browsers)
+            // If not Edge, check for Chrome
             else if (userAgent.indexOf("Chrome") > -1) {
                 edgeDiv.style.display = "none";
                 chromeDiv.style.display = "block";
             } else {
-                // If browser is neither recognized, show both instructions 
-                // or customize as you see fit.
+                // Show both by default
                 chromeDiv.style.display = "block";
                 edgeDiv.style.display = "block";
             }
         };
+
+        function copyMyText(me) {
+            me.select();
+            me.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(me.value);
+            let n = new JSAlert('Copied to Clipboard');
+            n.dismissIn(600);
+            n.show();
+        }
     </script>
 </body>
 
