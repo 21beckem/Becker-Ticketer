@@ -1,8 +1,9 @@
 async function loadJsFile(s) {
     const script = document.createElement("script");
     script.type = "text/javascript";
-    script.id = "injectorScriptForGenesysModder";
-    script.src = s;
+    script.id = "injectorsinjectorScriptForGenesysModder";
+    script.setAttribute('to-set-src', s);
+    script.src = chrome.runtime.getURL('injected/double_inject.js');
     document.body.appendChild(script);
 }
 function urlMatches(urlArr) {
