@@ -236,7 +236,17 @@ input[type="radio"]:checked+label.either_or {
     border-radius: 5px;
     display: none;
 }
-div:has(#Type_toSubmit_Incident:checked) + #incidentExtraInfoWrapper {
+div:has(#Type_toSubmit_Incident:checked) > #incidentExtraInfoWrapper {
+    display: block;
+}
+#addBuildingTable {
+    margin-top: 10px;
+    border: 0.5px solid var(--gen-dark-gray);
+    padding: 0 10px 10px;
+    border-radius: 5px;
+    display: none;
+}
+div:has(#Status_toSubmit_New:checked) > #addBuildingTable {
     display: block;
 }
 .custom-select {

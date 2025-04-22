@@ -199,11 +199,11 @@ async function generateTicketWithAI() {
     _('DescriptionTextarea_ToSubmit').value = result.desc + convLink; // set the description
     _('Title_toSubmit').value = result.title.trim().replace(/^(title:)/,'').replace(/^(Title:)/,'').trim().replace(/^"(.*)"$/g, '$1') // set the title and remove extra quotes and 'title:' from the beginning
     if (result.isIncident) { // select the correct radio buttons for incident or service request
-        _('Type_toSubmit_Incident').checked = true;
-        _('Status_toSubmit_New').checked = true;
+        _('Type_toSubmit_Incident').click();
+        _('Status_toSubmit_New').click();
     } else {
-        _('Type_toSubmit_Service_Request').checked = true;
-        _('Status_toSubmit_Resolved').checked = true;
+        _('Type_toSubmit_Service_Request').click();
+        _('Status_toSubmit_Resolved').click();
     }
     _('Responsible_toSubmit').setSelected(result.responsible);
     showLoader(false);
@@ -258,7 +258,14 @@ async function submitTicketToTD() {
     const kb = [ _('KB_toSubmit').value, _('KB_toSubmit').getAttribute('data-value') ];
     const description = _('DescriptionTextarea_ToSubmit').value;
 
-    let res = await TDcontrol.submitTicket( title, classification, responsible, status, uid, kb, description );
+    const impact = _('impact_toSubmit').value;
+    const urgency = _('urgency_toSubmit').value;
+    const priority = _('priority_toSubmit').value;
+    let b = [_('building_toSubmit').getAttribute('data-value'), _('building_toSubmit').value];
+    const building = (b[0]) ? b[0]+';'+b[1] : '';
+    const room = _('room_toSubmit').value;
+
+    let res = await TDcontrol.submitTicket( title, classification, responsible, status, uid, kb, description, building, room, impact, urgency, priority );
 
     showLoader(false);
 }

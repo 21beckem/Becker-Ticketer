@@ -69,17 +69,39 @@
 
         <label for="Type_toSubmit">Type</label>
         <div class="either_or">
-            <input type="radio" name="Type_toSubmit" id="Type_toSubmit_Incident" data-value="32" />
+            <input type="radio" name="Type_toSubmit" id="Type_toSubmit_Incident" data-value="32" onchange="handleAddBuildingBox(true);" />
             <label class="either_or one" for="Type_toSubmit_Incident">Incident</label>
-            <input type="radio" name="Type_toSubmit" id="Type_toSubmit_Service_Request" data-value="46" checked="checked" />
+            <input type="radio" name="Type_toSubmit" id="Type_toSubmit_Service_Request" data-value="46" checked="checked" onchange="handleAddBuildingBox(false);" />
             <label class="either_or two" for="Type_toSubmit_Service_Request">Service Request</label>
+        </div>
+        
+        <label for="Status_toSubmit">Status</label>
+        <div class="either_or">
+            <input type="radio" name="Status_toSubmit" id="Status_toSubmit_New" data-value="52" />
+            <label class="either_or one" for="Status_toSubmit_New">New</label>
+            <input type="radio" name="Status_toSubmit" id="Status_toSubmit_Resolved" data-value="55" checked="checked" />
+            <label class="either_or two" for="Status_toSubmit_Resolved">Resolved</label>
+        </div>
+        
+        <div id="addBuildingTable">
+            <div id="addBuildingOptionalHeader" style="text-align: center; transform: translateY(10px); font-size: 12px; color: var(--gen-dark-grey);">Optional</div>
+            <table style="transform: translateY(-10px);"><tr>
+                <td style="width: 60%;">
+                    <label for="building_toSubmit">Building:</label>
+                    <input type="text" id="building_toSubmit" data-obj="Buildings" class="autoComplete" name="building_toSubmit">
+                </td>
+                <td style="padding-left: 5px;">
+                    <label for="room_toSubmit">Room:</label>
+                    <input type="text" id="room_toSubmit" name="room_toSubmit" class="wide">
+                </td>
+            </tr></table>
         </div>
 
         <div id="incidentExtraInfoWrapper">
             <label for="impact_toSubmit" style="margin-top: 10px;">Amount of people impacted:</label>
             <div class="custom-select"><select name="impact_toSubmit" id="impact_toSubmit" onchange="(this.value==''?this.removeAttribute('selected'):this.setAttribute('selected',''))">
                 <option value="" style="display: none;"></option>
-                <option value="12;Fewer than 9 people are affected.">>10</option>
+                <option value="12;Fewer than 9 people are affected.">&lt;10</option>
                 <option value="13;10-99 people are affected.">10-99</option>
                 <option value="14;100+ people or a critical system is affected.s">100+</option>
             </select></div>
@@ -98,29 +120,23 @@
                 <option value="19;Medium (4)" selected>Medium (4)</option>
                 <option value="34;Low (5)">Low (5)</option>
             </select></div>
-            <table><tr>
-                <td style="width: 60%;">
-                    <label for="building_toSubmit">Building:</label>
-                    <input type="text" id="building_toSubmit" data-obj="Buildings" class="autoComplete" name="building_toSubmit">
-                </td>
-                <td style="padding-left: 5px;">
-                    <label for="room_toSubmit">Room:</label>
-                    <input type="text" id="room_toSubmit" name="room_toSubmit" class="wide">
-                </td>
-            </tr></table>
         </div>
+
+        <script>
+function handleAddBuildingBox(open) {
+    if (open) {
+        _('addBuildingTable').style.display = 'block';
+        _('addBuildingOptionalHeader').innerHTML = 'required';
+    } else {
+        _('addBuildingTable').style.display = '';
+        _('addBuildingOptionalHeader').innerHTML = 'optional';
+    }
+}
+        </script>
 
         <label for="Responsible_toSubmit">Responsible</label>
         <input type="text" id="Responsible_toSubmit" data-obj="ResponsibleGroups" class="autoComplete" name="Responsible_toSubmit">
-
-        <label for="Status_toSubmit">Status</label>
-        <div class="either_or">
-            <input type="radio" name="Status_toSubmit" id="Status_toSubmit_New" data-value="52" />
-            <label class="either_or one" for="Status_toSubmit_New">New</label>
-            <input type="radio" name="Status_toSubmit" id="Status_toSubmit_Resolved" data-value="55" checked="checked" />
-            <label class="either_or two" for="Status_toSubmit_Resolved">Resolved</label>
-        </div>
-
+        
         <label for="Title_toSubmit">Title</label>
         <input type="text" id="Title_toSubmit" name="Title_toSubmit" class="wide">
 

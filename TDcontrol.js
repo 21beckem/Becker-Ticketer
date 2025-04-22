@@ -34,7 +34,7 @@ class TDcontroler {
         out.isIncident = parseInt(out.isIncident.data.data) == 32 ? true : false;
         return out;
     }
-    async submitTicket(title, classification, responsible, status, uid, kb, description) {
+    async submitTicket(title, classification, responsible, status, uid, kb, description, building, room, impact, urgency, priority) {
         // ensure all values are strings
         title = String(title).trim();
         classification = String(classification).trim();
@@ -46,11 +46,20 @@ class TDcontroler {
         uid = String(uid).trim();
         kb[1] = String(kb[1]).trim();
         description = String(description).trim();
+        building = String(building).trim();
+        room = String(room).trim();
+        impact = String(impact).trim();
+        urgency = String(urgency).trim();
+        priority = String(priority).trim();
+
+        // get identity
         let identity = "login@byui.edu";
         try {
             identity = GenesysAuth.userMe.email;
         } catch (error) {}
-        const toSubmit = {
+
+        // create Ticket JSON
+        let toSubmit = {
             "Title": title,
             "Classification": classification,
             "Classification_Text": classification_text,
@@ -67,9 +76,25 @@ class TDcontroler {
             "Identity-UserId": identity,
             "_Result": "Becker Ticketer"
         };
+        // if incident, add the rest of the fields
+        if (classification == 32) {
+            toSubmit["ImpactID"] = impact.split(';')[0].trim();
+            toSubmit["ImpactName"] = impact.split(';')[1].trim();
+            toSubmit["UrgencyID"] = urgency.split(';')[0].trim();
+            toSubmit["UrgencyName"] = urgency.split(';')[1].trim();
+            toSubmit["PriorityID"] = priority.split(';')[0].trim();
+            toSubmit["PriorityName"] = priority.split(';')[1].trim();
+        }
+        // if incident or has location, add location
+        if (classification == 32 || building != '' || room.trim() != '') {
+            toSubmit["LocationID"] = building.split(';')[0].trim();
+            toSubmit["LocationName"] = building.split(';')[1].trim();
+            toSubmit["LocationRoomID"] = room.trim();
+            toSubmit["LocationRoomName"] = room.trim();
+        }
         console.log(toSubmit);
         let flowId = 'a5ad1f60-b8e9-4d02-92bb-644f9149965b';
-        if (location.href.includes('http://localhost') || location.href.includes('http://127.0.0.1')) {
+        if (location.href.startsWith('http://localhost') || location.href.startsWith('http://127.0.0.1')) {
             flowId = '92b1a324-64ac-4544-8b4e-7786cbe08706';
         }
         let res = await this.sendMessageToIframe('getAroundTheForm', flowId, toSubmit);
