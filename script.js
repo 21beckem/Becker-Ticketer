@@ -193,7 +193,7 @@ async function generateTicketWithAI() {
     // get Interaction Link
     let convLink = '';
     if (GenesysAuth.conversation && GenesysAuth.conversation.id) {
-        convLink = ' \n\nInteraction Link: https://apps.usw2.pure.cloud/directory/#/engage/admin/interactions/' + GenesysAuth.conversation.id;
+        convLink = ' \n\nInteraction Link: https://apps.usw2.pure.cloud/directory/#/analytics/interactions/' + GenesysAuth.conversation.id + '/admin/';
     }
 
     _('DescriptionTextarea_ToSubmit').value = result.desc + convLink; // set the description
