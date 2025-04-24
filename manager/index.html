@@ -272,5 +272,15 @@ window.addEventListener('message', function(event) {
     console.log('Received message:', event.data);
 });
     </script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQC33TP5ZM"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-RQC33TP5ZM');
+    </script>
 </body>
 </html>
