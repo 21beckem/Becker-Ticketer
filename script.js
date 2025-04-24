@@ -208,7 +208,14 @@ async function generateTicketWithAI() {
     _('Responsible_toSubmit').setSelected(result.responsible);
     showLoader(false);
 
+    // show insert transcript button if not in a voice interaction
+    _('InsertChatTranscript').style.display = GenesysAuth.interactionType.includes('voice') ? 'none' : 'block';
+
     _('ReviewAccordionBtn').setActive();
+}
+
+async function insertChatTranscript() {
+    _('DescriptionTextarea_ToSubmit').value += '\n\n------------------------------------------------\n' + await GenesysAuth.getConversationTranscript();
 }
 
 async function submitTicketToTD() {

@@ -125,7 +125,7 @@ input.wide {
     border: 1px solid var(--gen-orange);
     cursor: pointer;
 }
-.submitBtn:focus {
+.submitBtn:active {
     outline: none;
     border-color: var(--gen-orange);
     color: white;

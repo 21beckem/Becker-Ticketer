@@ -71,6 +71,8 @@ class GenAuth {
                 BackMeUp.includeVar('gcConversationId', this.appParams.gcConversationId);
             } catch (e) {}
         },2000)
+
+        this.determineInteractionType();
         
         //
         // Lifecycle Events
@@ -172,59 +174,48 @@ class GenAuth {
         }
         return appParams;
     };
-    initializeApplication() {
+    async initializeApplication() {
         console.log("Performing application bootstrapping");
-    
+
         // Perform Implicit Grant Authentication
-        //
-        // Note: Pass the query string parameters in the 'state' parameter so that they are returned
-        //       to us after the implicit grant redirect.
-        this.client.loginImplicitGrant(this.appParams.clientId, this.redirectUri, { state: this.integrationQueryString })
-            .then((data) => {
-                // User Authenticated
-                console.log("User Authenticated:", data);
-    
-                this.connectingUpdatesCallback("Querying User...");
-    
-                // Make request to GET /api/v2/users/me?expand=presence
-                return this.usersApi.getUsersMe({ 'expand': ["presence","authorization"] });
-            })
-            .then((userMe) => {
-                // Me Response
-                this.userMe = userMe;
-    
-                this.connectingUpdatesCallback("Connected Username: " + this.userMe.username);
-    
-                this.connectingUpdatesCallback("Querying Conversation...");
-    
-                console.log("Getting initial conversation details for conversation ID: " + this.appParams.gcConversationId);
-                return this.conversationsApi.getConversation(this.appParams.gcConversationId);
-            }).then((data) => {
-                console.log("Conversation details for " + this.appParams.gcConversationId + ": " + JSON.stringify(data));
-                this.connectingUpdatesCallback( JSON.stringify(data, null, 3) );
-                this.conversation = data;
-    
-                this.myClientApp.lifecycle.bootstrapped();
-    
-                // this.myClientApp.alerting.showToastPopup(
-                //     'Becker Ticketer',
-                //     'Bootstrap Complete', {
-                //         id: 'Becker-Ticketer-statusMsg',
-                //         type: 'success'
-                //     }
-                // );
-    
-                this.logLifecycleEvent('Notified Genesys Cloud of Successful App Bootstrap', false);
-            }).catch((err) => {
-                this.connectingUpdatesCallback("Error: See Console");
-                // Handle failure response
-                console.log(err);
-                showToast(err.message);
-            });
+        const data = await this.client.loginImplicitGrant(this.appParams.clientId, this.redirectUri, { state: this.integrationQueryString });
+
+        // User Authenticated
+        console.log("User Authenticated:", data);
+
+        this.connectingUpdatesCallback("Querying User...");
+
+        // Make request to GET /api/v2/users/me?expand=presence
+        this.userMe = await this.usersApi.getUsersMe({ 'expand': ["presence", "authorization"] });
+
+        // Me Response
+        this.connectingUpdatesCallback("Connected Username: " + this.userMe.username);
+
+        this.connectingUpdatesCallback("Querying Conversation...");
+
+        console.log("Getting initial conversation details for conversation ID: " + this.appParams.gcConversationId);
+        this.conversation = await this.conversationsApi.getConversation(this.appParams.gcConversationId);
+
+        console.log("Conversation details for " + this.appParams.gcConversationId + ": " + JSON.stringify(this.conversation));
+        this.connectingUpdatesCallback(JSON.stringify(this.conversation, null, 3));
+
+        this.myClientApp.lifecycle.bootstrapped();
+
+        this.interactionType = await this.determineInteractionType();
+
+        this.logLifecycleEvent('Notified Genesys Cloud of Successful App Bootstrap', false);
     }
 
-    
+
     // functions that other things can call, not just for internal use inside this library
+
+    async determineInteractionType() {
+        let details = await this.conversationsApi.getAnalyticsConversationDetails(this.conversation.id);
+        if (details && details.participants && details.participants.length > 0 && details.participants[0].sessions && details.participants[0].sessions.length > 0 && details.participants[0].sessions[0].mediaType) {
+            return details.participants[0].sessions[0].mediaType.toLowerCase();
+        }
+        return 'unknown';
+    }
 
     async createNewContactFromNumber(firstName, lastName, number) {
         return await this.extContactsApi.postExternalcontactsContacts({
@@ -238,33 +229,44 @@ class GenAuth {
               }
         });
     }
-}
 
-async function getConversationTranscript() {
-    let conversationId = 'af458f2f-33ea-4a05-91f4-db395fda8115';
-    let participants = ( await GenesysAuth.conversationsApi.getConversationsMessage(conversationId) ).participants;
-    let waits = [];
-    // loop through participants and request messages
-    participants.forEach(part => {
-        part.messages.forEach(msg => {
-            if (!msg.messageId) return;
-            waits.push(
-                GenesysAuth.conversationsApi.getConversationsMessageMessage(conversationId, msg.messageId, { 
-                    "useNormalizedMessage": true // Boolean | If true, response removes deprecated fields (textBody, media, stickers)
-                })
-            );
+    async getConversationTranscript(toString=true) {
+        let conversationId = this.conversation.id;
+        let participants = ( await this.conversationsApi.getConversationsMessage(conversationId) ).participants;
+        let waits = [];
+        // loop through participants and request messages
+        participants.forEach(part => {
+            part.messages.forEach(msg => {
+                if (!msg.messageId) return;
+                waits.push([
+                        part.purpose,
+                        this.conversationsApi.getConversationsMessageMessage(conversationId, msg.messageId, { 
+                            "useNormalizedMessage": true // Boolean | If true, response removes deprecated fields (textBody, media, stickers)
+                        })
+                    ]);
+            });
         });
-    });
-    // wait for all messages to return
-    for (let i = 0; i < waits.length; i++) {
-        waits[i] = (await waits[i]);
-        waits[i] = {
-            timestamp: waits[i].normalizedMessage.channel.time,
-            userId: waits[i].normalizedMessage.channel.from,
-            text: waits[i].normalizedMessage.text
-        };
+        // wait for all messages to return
+        for (let i = 0; i < waits.length; i++) {
+            waits[i][1] = (await waits[i][1]);
+            if (!waits[i][1].normalizedMessage.text) continue;
+            waits[i][1] = {
+                timestamp: waits[i][1].normalizedMessage.channel.time,
+                userId: waits[i][1].normalizedMessage.channel.from,
+                text: waits[i][1].normalizedMessage.text
+            };
+        }
+        // sort by timestamp
+        waits = waits.sort((a, b) => {
+            return new Date(a[1].timestamp).getTime() - new Date(b[1].timestamp).getTime();
+        });
+        if (toString) {
+            // convert to string
+            waits = waits.map((msg) => {
+                return `[${msg[0]}]: ${msg[1].text}`;
+            }).join("\n");
+        }
+        // return
+        return waits;
     }
-    // return
-    console.log("Transcript:");
-    console.log(waits);
 }
