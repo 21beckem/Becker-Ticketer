@@ -239,3 +239,32 @@ class GenAuth {
         });
     }
 }
+
+async function getConversationTranscript() {
+    let conversationId = 'af458f2f-33ea-4a05-91f4-db395fda8115';
+    let participants = ( await GenesysAuth.conversationsApi.getConversationsMessage(conversationId) ).participants;
+    let waits = [];
+    // loop through participants and request messages
+    participants.forEach(part => {
+        part.messages.forEach(msg => {
+            if (!msg.messageId) return;
+            waits.push(
+                GenesysAuth.conversationsApi.getConversationsMessageMessage(conversationId, msg.messageId, { 
+                    "useNormalizedMessage": true // Boolean | If true, response removes deprecated fields (textBody, media, stickers)
+                })
+            );
+        });
+    });
+    // wait for all messages to return
+    for (let i = 0; i < waits.length; i++) {
+        waits[i] = (await waits[i]);
+        waits[i] = {
+            timestamp: waits[i].normalizedMessage.channel.time,
+            userId: waits[i].normalizedMessage.channel.from,
+            text: waits[i].normalizedMessage.text
+        };
+    }
+    // return
+    console.log("Transcript:");
+    console.log(waits);
+}
