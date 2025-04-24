@@ -215,7 +215,12 @@ async function generateTicketWithAI() {
 }
 
 async function insertChatTranscript() {
-    _('DescriptionTextarea_ToSubmit').value += '\n\n------------------------------------------------\n' + await GenesysAuth.getConversationTranscript();
+    _('DescriptionTextarea_ToSubmit').value += `
+
+------------------------------------------------
+       Interaction Transcript
+------------------------------------------------
+` + await GenesysAuth.getConversationTranscript();
 }
 
 async function submitTicketToTD() {
