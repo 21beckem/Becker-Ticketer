@@ -209,7 +209,7 @@ async function generateTicketWithAI() {
     showLoader(false);
 
     // show insert transcript button if not in a voice interaction
-    _('InsertChatTranscript').style.display = GenesysAuth.interactionType.includes('voice') ? 'none' : 'block';
+    _('insertChatTranscriptBtn').style.display = GenesysAuth.interactionType.includes('voice') ? 'none' : 'block';
 
     _('ReviewAccordionBtn').setActive();
 }
