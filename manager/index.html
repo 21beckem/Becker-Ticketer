@@ -22,6 +22,10 @@ html, body {
     --gen-green: #77DD22;
 }
 header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100% - 2rem);
     padding: 1rem;
     justify-content: space-between;
     align-items: center;
@@ -130,6 +134,7 @@ overlay .ticket-window {
             </button>
         </div>
     </header>
+    <br><br><br><br>
     <main class="ticketsToComplete">
         <h2>Incomplete Tickets</h2>
         <ul id="ticketList">
@@ -152,6 +157,7 @@ overlay .ticket-window {
     </overlay>
 
     <script src="../waitUntilExtensionInstalled.js"></script>
+    <script src="../jsalert.js"></script>
 
     <script>
 // Load tickets from local storage
@@ -206,8 +212,8 @@ document.addEventListener("DOMContentLoaded", loadTickets);
 function openPersonProfile(uId) {
     openPopupWindow(`https://td.byui.edu/TDNext/Apps/People/PersonDet.aspx?U=${uId}`, 800, 760);
 }
-function removeTicket(ticketId) {
-    if (confirm("Are you sure you want to remove this ticket?")) {
+async function removeTicket(ticketId) {
+    if ( await JSAlert.confirm('<br>Are you sure you want to delete this ticket?<br><br>', 'Delete?', '../img/Becker-Ticketer%20Logo.svg', 'Yes', 'No, Cancel') ) {
         localStorage.removeItem('Becker_Ticker_' + ticketId);
         window.location.reload();
     }
