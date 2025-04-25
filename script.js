@@ -268,7 +268,7 @@ async function submitTicketToTD() {
     const status = _('Status_toSubmit_New').checked ? _('Status_toSubmit_New').getAttribute('data-value') : _('Status_toSubmit_Resolved').getAttribute('data-value');
     const uid = SelectedPersonId;
     const kb = [ _('KB_toSubmit').value, _('KB_toSubmit').getAttribute('data-value') ];
-    const description = _('DescriptionTextarea_ToSubmit').value;
+    const description = _('DescriptionTextarea_ToSubmit').value.replace(/\n/g, '<br>');
 
     const impact = _('impact_toSubmit').value;
     const urgency = _('urgency_toSubmit').value;
