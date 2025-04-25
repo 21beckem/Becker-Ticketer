@@ -210,10 +210,12 @@ class GenAuth {
     // functions that other things can call, not just for internal use inside this library
 
     async determineInteractionType() {
-        let details = await this.conversationsApi.getAnalyticsConversationDetails(this.conversation.id);
-        if (details && details.participants && details.participants.length > 0 && details.participants[0].sessions && details.participants[0].sessions.length > 0 && details.participants[0].sessions[0].mediaType) {
-            return details.participants[0].sessions[0].mediaType.toLowerCase();
-        }
+        try {
+            let details = await this.conversationsApi.getAnalyticsConversationDetails(this.appParams.gcConversationId);
+            if (details && details.participants && details.participants.length > 0 && details.participants[0].sessions && details.participants[0].sessions.length > 0 && details.participants[0].sessions[0].mediaType) {
+                return details.participants[0].sessions[0].mediaType.toLowerCase();
+            }
+        } catch (e) {}
         return 'unknown';
     }
 
