@@ -31,4 +31,7 @@ window.addEventListener('load', () => {
     else if (urlMatches("apps.usw2.pure.cloud/messaging-gadget")) {
         loadJsFile( 'https://21beckem.github.io/Becker-Ticketer/injected/chat_responses.js' );
     }
+    else if (urlMatches("https://td.byui.edu")) {
+        loadJsFile( 'https://21beckem.github.io/Becker-Ticketer/injected/take_control.js' );
+    }
 });

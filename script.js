@@ -137,9 +137,18 @@ function populateRequestorCards() {
         personCard.className = 'personCard';
         if (result == 0) {
             personCard.innerHTML = `
-                <h3 style="cursor:default">No Results or Too Many</h3>
-                <p>Please Try a</p>
-                <p>new search.</p>
+                <h3 style="cursor:default; text-align:center">No Results or Too Many</h3>
+            `;
+            peopleReultsList.appendChild(personCard);
+            personCard = document.createElement('div');
+            personCard.className = 'personCard';
+            personCard.innerHTML = `
+                <h3 style="cursor:default;">Options:</h3>
+                <ul>
+                    <li>Try <div onclick="openLinkFromTop(this)" href="https://roles.byui.edu/Users.aspx" class="link">Role Manager</div></li>
+                    <li>Create a <div onclick="openCreatePersonWindow()" class="link">New Person</div></li>
+                    <li>Try a different search</li>
+                </ul>
             `;
             peopleReultsList.appendChild(personCard);
             return;
@@ -160,12 +169,19 @@ function populateRequestorCards() {
     });
 }
 let currentPopupWindow = null;
+function openCreatePersonWindow() {
+    const popupWidth = 800;
+    const popupHeight = 760;
+    const left = (screen.width - popupWidth) / 2;
+    const top = (screen.height - popupHeight) / 2;
+    currentPopupWindow = window.open('https://td.byui.edu/TDNext/Apps/People/PersonNew', 'CreatePerson', 'width='+popupWidth+',height='+popupHeight+',top='+top+',left='+left);
+}
 function openPersonDetails(U_identifier) {
     const popupWidth = 800;
     const popupHeight = 760;
     const left = (screen.width - popupWidth) / 2;
     const top = (screen.height - popupHeight) / 2;
-    currentPopupWindow = window.open('https://td.byui.edu/TDNext/Apps/People/PersonDet.aspx?U=' + U_identifier, 'PersonDetails', 'width='+popupWidth+',height='+popupHeight+',top='+top+',left='+left);
+    window.open('https://td.byui.edu/TDNext/Apps/People/PersonDet.aspx?U=' + U_identifier, 'PersonDetails', 'width='+popupWidth+',height='+popupHeight+',top='+top+',left='+left);
 }
 function openInNewTab(url) {
     window.open(url, '_blank');

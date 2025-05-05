@@ -117,6 +117,13 @@ input.wide {
     width: calc(100% - 20px);
 }
 
+div.link {
+    color: var(--gen-blue);
+    cursor: pointer;
+    display: inline;
+    text-decoration: underline;
+}
+
 .submitBtn {
     padding: 10px 30px;
     margin-bottom: 20px;
