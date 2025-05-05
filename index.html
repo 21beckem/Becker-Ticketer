@@ -22,13 +22,14 @@
     <img src="img/Becker-Ticketer Logo.svg" alt="" style="display: none">
     <img src="img/Becker-Ticketer Logo.jpg" alt="" style="display: none">
     <div id="taskbar">
-        <div onclick="openLinkFromTop(this)" href="https://td.byui.edu/TDNext/Login.aspx" style="background-image: url(https://www.teamdynamix.com/wp-content/uploads/2024/06/TeamDynamix-Icon.png)"></div>
-        <div onclick="openLinkFromTop(this)" href="https://assist.byui.edu/" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=bf2f6281-9891-45c2-a68c-d214671a40b8.png)"></div>
-        <div onclick="openLinkFromTop(this)" href="https://web.byui.edu/username/HelpDesk/ResetPassword" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=1d04f869-dbf6-46f6-aa87-caaab1c4583e.png)"></div>
-        <div onclick="openLinkFromTop(this)" href="https://admin.duosecurity.com/login" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=8cfaa28f-18d6-4d60-a145-5d7b74a04bde.png)"></div>
-        <div onclick="openLinkFromTop(this)" href="https://roles.byui.edu/Users.aspx" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=e9c1824d-2660-4a1f-865c-69bb2dfe112b.png)"></div>
-        <div onclick="openLinkFromTop(this)" href="https://reports.byui.edu/reports/report/Administrative%20Departments/999%20Lookup" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=66646489-382e-493a-a06c-3d0e63b7b6cf.png)"></div>
-        <div onclick="openLinkFromTop(this)" href="https://outlook.office.com/mail/ITSupport@byui.edu/inbox" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=e803a138-6161-49c6-9983-18402c76280d.png)"></div>
+        <div onclick="openCreatePersonWindow()" tooltip="New TD Person" style="background-color: #d9d5eb;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" style="aspect-ratio: 1; transform: translateY(-2px); margin: 5px;"><path fill="#4b3bb9" d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM504 312l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg></div>
+        <div onclick="openLinkFromTop(this)" tooltip="TeamDynamix" href="https://td.byui.edu/TDNext/Login.aspx" style="background-image: url(https://www.teamdynamix.com/wp-content/uploads/2024/06/TeamDynamix-Icon.png)"></div>
+        <div onclick="openLinkFromTop(this)" tooltip="Zoho Screen Share" href="https://assist.byui.edu/" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=bf2f6281-9891-45c2-a68c-d214671a40b8.png)"></div>
+        <div onclick="openLinkFromTop(this)" tooltip="Password Reset" href="https://web.byui.edu/username/HelpDesk/ResetPassword" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=1d04f869-dbf6-46f6-aa87-caaab1c4583e.png)"></div>
+        <div onclick="openLinkFromTop(this)" tooltip="DUO Admin" href="https://admin.duosecurity.com/login" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=8cfaa28f-18d6-4d60-a145-5d7b74a04bde.png)"></div>
+        <div onclick="openLinkFromTop(this)" tooltip="Role Manager" href="https://roles.byui.edu/Users.aspx" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=e9c1824d-2660-4a1f-865c-69bb2dfe112b.png)"></div>
+        <div onclick="openLinkFromTop(this)" tooltip="999 Lookup" href="https://reports.byui.edu/reports/report/Administrative%20Departments/999%20Lookup" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=66646489-382e-493a-a06c-3d0e63b7b6cf.png)"></div>
+        <div onclick="openLinkFromTop(this)" tooltip="Work Email" href="https://outlook.office.com/mail/ITSupport@byui.edu/inbox" style="background-image: url(https://td.byui.edu/TDPortal/Images/Viewer?fileName=e803a138-6161-49c6-9983-18402c76280d.png)"></div>
     </div>
     <script src="taskbar.js"></script>
 

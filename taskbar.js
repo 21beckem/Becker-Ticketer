@@ -27,6 +27,24 @@
     box-shadow: 0 0 7px -4px black;
     border-radius: 20px;
     transition: width 0.03s ease, height 0.03s ease;
+    position: relative;
+}
+#taskbar div tip {
+    background-color: white;
+    padding: 5px 10px;
+    top: 50%;
+    position: absolute;
+    transform: translate(calc(-100% - 10px), -50%);
+    font-size: 14px;
+    box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+#taskbar div[tooltip-visible] tip {
+    opacity: 1;
 }
     `;
     document.head.appendChild(style);
@@ -69,4 +87,31 @@
             icon.style.height = `${scale * 40}px`;
         });
     });
+
+    // make tooltop objects
+    icons.forEach(icon => {
+        const tip = document.createElement('tip');
+        tip.textContent = icon.getAttribute('tooltip');
+        icon.insertBefore(tip, icon.firstChild);
+    });
+
+    // Tooltip timers
+    const hoverTimeMap = new Map();
+    icons.forEach(icon => {
+        let tooltipTimeout;
+
+        icon.addEventListener('mouseenter', () => {
+            tooltipTimeout = setTimeout(() => {
+                icon.setAttribute('tooltip-visible', 'true');
+            }, 750);  // 1 second delay to show tooltip
+            hoverTimeMap.set(icon, tooltipTimeout);
+        });
+
+        icon.addEventListener('mouseleave', () => {
+            clearTimeout(hoverTimeMap.get(icon));
+            icon.removeAttribute('tooltip-visible');
+            hoverTimeMap.delete(icon);
+        });
+    });
+
 })();
